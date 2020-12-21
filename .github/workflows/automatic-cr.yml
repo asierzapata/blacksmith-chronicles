@@ -1,0 +1,19 @@
+name: Automatic Code Review
+on: [pull_request]
+
+jobs:
+  tfsec:
+    name: runner / tfsec
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Pull Request
+        uses: actions/checkout@v2
+      - name: Run tfsec with reviewdog
+        uses: reviewdog/action-tfsec@v1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          fail_on_error: 'true'
+          filter_mode: 'nofilter' # Check all files, not just the diff
+          flags: '' # Optional

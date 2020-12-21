@@ -1,0 +1,13 @@
+# Add 'fragile' to any dependencies change
+Fragile:
+  - package.json
+  - entry_points/**/package.json
+
+City:
+  - entry_points/city_api/**/*
+
+User:
+  - entry_points/user_api/**/*
+
+GameWeb:
+  - entry_points/game_web/**/*
