@@ -1,0 +1,16 @@
+{
+	// This file is required for VSCode to understand webpack aliases
+	"compilerOptions": {
+		// This must be specified if "paths" is set
+		"baseUrl": ".",
+		// Relative to "baseUrl"
+		"paths": {
+			"city/*": ["./src/city/*"],
+			"city_api/*": ["./entry_points/city_api/*"],
+			"user/*": ["./src/user/*"],
+			"user_api/*": ["./entry_points/user_api/*"],
+			"shared_kernel/*": ["./src/shared_kernel/*"],
+		}
+	},
+	"exclude": ["node_modules", "**/node_modules/*"]
+}

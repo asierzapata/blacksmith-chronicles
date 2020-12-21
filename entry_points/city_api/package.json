@@ -1,5 +1,5 @@
 {
-  "name": "game_http_api",
+  "name": "city_api",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT"
