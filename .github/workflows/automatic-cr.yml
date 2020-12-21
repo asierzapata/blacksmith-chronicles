@@ -2,8 +2,8 @@ name: Automatic Code Review
 on: [pull_request]
 
 jobs:
-  tfsec:
-    name: runner / tfsec
+  Linting:
+    name: Automatic code linting
     runs-on: ubuntu-latest
 
     steps:

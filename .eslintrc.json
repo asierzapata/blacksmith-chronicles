@@ -7,7 +7,6 @@
 		"promise",
 		"prettier",
 		"jsx-a11y",
-		"eslint-plugin-cypress",
 		"react-hooks",
 		"jest-dom",
 		"testing-library"
@@ -27,7 +26,6 @@
 		"node": true,
 		"mocha": true,
 		"jest": true,
-		"cypress/globals": true
 	},
 	"globals": {
 		"document": false,
