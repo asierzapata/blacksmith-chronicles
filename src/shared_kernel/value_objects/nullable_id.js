@@ -1,3 +1,4 @@
+/* eslint-disable constructor-super */
 const _ = require('lodash')
 
 const { Id, idError } = require('shared_kernel/value_objects/id')
@@ -11,7 +12,7 @@ const ValueObject = require('shared_kernel/value_objects/value_object')
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function nullableIdError({ value, message = '' } = {}) {
+function nullableIdError() {
 	// return errors.badRequest({ errorCode: 'invalid-nullable-id', value, message })
 }
 
@@ -28,7 +29,7 @@ class NullableId extends ValueObject {
 			const parsedValue = new Id(value)
 			return super(parsedValue.toValue())
 		} catch (err) {
-			if (!errors.isApplicationError(err)) throw err
+			// if (!errors.isApplicationError(err)) throw err
 			switch (err.getErrorCode()) {
 				case idError().getErrorCode():
 					throw nullableIdError({ value })

@@ -1,12 +1,13 @@
 const _ = require('lodash')
 const chance = require('chance').Chance()
+
 const ValueObject = require('shared_kernel/value_objects/value_object')
 
 /* ====================================================== */
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function sessionTypeError(value) {
+function sessionTypeError() {
 	// return errors.internalServer({ errorCode: 'invalid-session-type', value, message: '' })
 }
 

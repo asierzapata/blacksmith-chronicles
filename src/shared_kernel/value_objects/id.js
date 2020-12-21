@@ -37,4 +37,7 @@ class Id extends ValueObject {
 /*                        Public API                      */
 /* ====================================================== */
 
-module.exports = { Id, idError }
+module.exports = {
+	Id,
+	// idError
+}

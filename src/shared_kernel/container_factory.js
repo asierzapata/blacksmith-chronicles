@@ -36,6 +36,7 @@ async function createContainer({
 	logger,
 	envVars,
 	sessionValueObject,
+	onDestroy,
 }) {
 	if (_.isEmpty(modules)) throw new Error('There should be at least one module')
 
@@ -172,12 +173,7 @@ async function createContainer({
 			delete container.registeredModuleDependencies[moduleName][dependencyName]
 		},
 		async destroy() {
-			if (envVars.isTesting) {
-				await databaseConnection.drop()
-				await databaseConnection.disconnect()
-			} else {
-				await databaseConnection.disconnect()
-			}
+			onDestroy()
 		},
 	}
 }

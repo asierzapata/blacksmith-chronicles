@@ -8,7 +8,7 @@ const chance = new Chance()
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function timestampError({ value, message = '' } = {}) {
+function timestampError() {
 	// return errors.internalServer({ errorCode: 'invalid-timestamp', value, message })
 }
 
@@ -18,8 +18,8 @@ function timestampError({ value, message = '' } = {}) {
 
 class Timestamp extends ValueObject {
 	constructor(value = '') {
-		if (value instanceof Date) return super(value)
-		throw timestampError({ value })
+		if (!(value instanceof Date)) throw timestampError({ value })
+		super(value)
 	}
 
 	static now() {

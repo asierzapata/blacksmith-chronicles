@@ -7,7 +7,7 @@ const ValueObject = require('shared_kernel/value_objects/value_object')
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function sessionSourceError(value) {
+function sessionSourceError() {
 	// return errors.internalServer({
 	// 	errorCode: 'invalid-session-source',
 	// 	value,
