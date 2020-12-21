@@ -1,8 +1,8 @@
-name: Automatic Code Review
+name: 'Automatic Code Review'
 on: [pull_request]
 
 jobs:
-  Linting:
+  linting:
     name: Automatic code linting
     runs-on: ubuntu-latest
 
