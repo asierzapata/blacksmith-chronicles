@@ -16,7 +16,7 @@ const { SessionDevice } = require('city/shared/session/session_device')
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function sessionError(value) {
+function sessionError() {
 	// return errors.internalServer({ errorCode: 'invalid-session', value, message: '' })
 }
 

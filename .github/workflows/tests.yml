@@ -20,9 +20,9 @@ jobs:
         with:
           node-version: '12.19.0'
       - name: Clean install BE dependencies
-        run: yarn ci --prefix entry_points/city_api
+        run: yarn --cwd entry_points/city_api ci
       - name: Run BE tests
-        run: npm run test --prefix entry_points/city_api
+        run: yarn --cwd entry_points/city_api test
   User:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -35,6 +35,6 @@ jobs:
         with:
           node-version: '12.19.0'
       - name: Clean install BE dependencies
-        run: yarn ci --prefix entry_points/user_api
+        run: yarn --cwd entry_points/user_api ci
       - name: Run BE tests
-        run: npm run test --prefix entry_points/user_api
+        run: yarn --cwd entry_points/user_api test

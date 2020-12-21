@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
@@ -10,8 +8,6 @@ const queryOrCommandLoggingBusMiddleware = ({ logger }) => (next) => async (
 ) => {
 	const id = commandOrQuery.getId()
 	const name = commandOrQuery.getType()
-	const occurredOn = commandOrQuery.getOccurredOn()
-	const attributes = commandOrQuery.getAttributes()
 	const correlationId = commandOrQuery.getMetadata().correlationId
 	const causationId = commandOrQuery.getMetadata().causationId
 
@@ -41,8 +37,6 @@ const eventHandlerLoggingBusMiddleware = ({ logger }) => (next) => async (
 ) => {
 	const name = event.getType()
 	const id = event.getId()
-	const occurredOn = event.getOccurredOn()
-	const attributes = event.getAttributes()
 	const sync = event.getMetadata().sync
 	const correlationId = event.getMetadata().correlationId
 	const causationId = event.getMetadata().causationId

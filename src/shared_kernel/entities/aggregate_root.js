@@ -58,9 +58,16 @@ class AggregateRoot {
 	}
 
 	changedAttributes() {
-		return _.transform(this._attributes, (result, value, key) => {
-			result[key] = this.isNew || !value.equals(this._initialAttributes[key])
-		})
+		return _.reduce(
+			this._attributes,
+			(result, value, key) => {
+				return {
+					...result,
+					[key]: this.isNew || !value.equals(this._initialAttributes[key]),
+				}
+			},
+			{}
+		)
 	}
 
 	// Events

@@ -1,3 +1,4 @@
+/* eslint-disable constructor-super */
 const _ = require('lodash')
 const Chance = require('chance')
 
@@ -14,7 +15,7 @@ const chance = new Chance()
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function nullableTimestampError({ value, message = '' } = {}) {
+function nullableTimestampError() {
 	// return errors.internalServer({
 	// 	errorCode: 'invalid-nullable-timestamp',
 	// 	value,
@@ -35,7 +36,7 @@ class NullableTimestamp extends ValueObject {
 			const parsedValue = new Timestamp(value)
 			return super(parsedValue.toValue())
 		} catch (err) {
-			if (!errors.isApplicationError(err)) throw err
+			// if (!errors.isApplicationError(err)) throw err
 			switch (err.getErrorCode()) {
 				case timestampError().getErrorCode():
 					throw nullableTimestampError({ value })
