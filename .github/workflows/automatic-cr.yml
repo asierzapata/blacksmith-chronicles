@@ -9,11 +9,19 @@ jobs:
     steps:
       - name: Checkout Pull Request
         uses: actions/checkout@v2
-      - name: Run tfsec with reviewdog
-        uses: reviewdog/action-tfsec@v1.0.0
+      - name: Run misspell with reviewdog
+        uses: reviewdog/action-misspell@v1.2.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
-          fail_on_error: 'true'
-          filter_mode: 'nofilter' # Check all files, not just the diff
-          flags: '' # Optional
+          locale: 'US'
+      - name: Run eslint with reviewdog
+        uses: reviewdog/action-eslint@v1
+        with:
+          reporter: github-pr-review
+      - name: dotenv-linter
+        uses: dotenv-linter/action-dotenv-linter@v2
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          dotenv_linter_flags: --skip UnorderedKey
