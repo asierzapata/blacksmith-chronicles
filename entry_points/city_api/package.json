@@ -4,18 +4,36 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
+		"prestart:dev": "yarn",
+		"start:dev": "NODE_ENV=development NODE_PATH=./node_modules:../:../../src nodemon --watch ./ --watch ../../src index.js",
 		"preci": "rm -fr node_modules",
 		"ci": "yarn install --frozen-lockfile",
 		"test": "jest"
 	},
 	"dependencies": {
+		"@aws-sdk/client-dynamodb": "3.0.0",
+		"body-parser": "1.19.0",
 		"chance": "1.1.7",
+		"cookie-parser": "1.4.5",
+		"cors": "2.8.5",
+		"detect-browser": "5.2.0",
+		"dotenv": "8.2.0",
+		"express": "4.17.1",
+		"express-pino-logger": "5.0.0",
+		"helmet": "4.2.0",
+		"joi": "14.3.1",
+		"jsonwebtoken": "8.5.1",
 		"lodash": "4.17.20",
+		"moment": "2.29.1",
 		"nanoid": "3.1.20",
+		"pino": "6.8.0",
+		"pino-pretty": "4.3.0",
 		"ua-parser-js": "0.7.23",
-		"uuid": "8.3.2"
+		"uuid": "8.3.2",
+		"yes-https": "2.0.0"
 	},
 	"devDependencies": {
-		"jest": "26.6.3"
+		"jest": "26.6.3",
+		"nodemon": "2.0.6"
 	}
 }

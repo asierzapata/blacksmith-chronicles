@@ -1,5 +1,5 @@
 const assert = require('assert')
-const MongoClient = require('mongodb').MongoClient
+// const MongoClient = require('mongodb').MongoClient
 
 /* ====================================================== */
 /*                    Implementation                      */
@@ -15,14 +15,14 @@ class Database {
 	}
 
 	async connect() {
-		const client = await MongoClient.connect(this.url, {
-			useUnifiedTopology: true,
-			useNewUrlParser: true,
-			logger: this.logger,
-		})
+		// const client = await MongoClient.connect(this.url, {
+		// 	useUnifiedTopology: true,
+		// 	useNewUrlParser: true,
+		// 	logger: this.logger,
+		// })
 
-		this.client = client
-		this.db = client.db(this.name)
+		// this.client = client
+		// this.db = client.db(this.name)
 
 		return {
 			db: this.db,

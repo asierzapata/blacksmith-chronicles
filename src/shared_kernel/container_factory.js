@@ -28,9 +28,9 @@ module.exports = {
 async function createContainer({
 	modules = [],
 	middlewares = [],
-	startEventHandling = _.noop,
-	startCommandHandling = _.noop,
-	startQueryHandling = _.noop,
+	startEventHandling = (handler) => handler(),
+	startCommandHandling = (handler) => handler(),
+	startQueryHandling = (handler) => handler(),
 	db,
 	eventStore,
 	logger,
