@@ -36,12 +36,10 @@ class DeleteCityCommand extends Command {
 
 async function handleDeleteCityCommand(command, dependencies) {
 	const cityId = new Id(command.getAttributes().cityId)
-	console.log('>>>>>>', `handleDeleteCityCommand`)
 	try {
 		const city = await deleteCityUseCase({ cityId }, dependencies)
 		return CityResponse.dataResponse({ cities: [city] })
 	} catch (err) {
-		console.log('>>>>>>', err)
 		return CityResponse.errorResponse({ errors: [err] })
 	}
 }
