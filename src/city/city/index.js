@@ -3,8 +3,8 @@
 /* ====================================================== */
 
 const {
-	MemoryCityRepository,
-} = require('city/city/infrastructure/repositories/memory_city_repository')
+	DynamoDBCityRepository,
+} = require('city/city/infrastructure/repositories/dynamodb_city_repository')
 
 /* ====================================================== */
 /*                        Events                          */
@@ -45,9 +45,6 @@ const {
 	GetCitiesByUserIdQuery,
 	handleGetCitiesByUserIdQuery,
 } = require('city/city/application/get_cities_by_user_id/get_cities_by_user_id_query_handler')
-const {
-	DynamoDBCityRepository,
-} = require('./infrastructure/repositories/dynamodb_city_repository')
 
 // Event Handlers
 // --------------
