@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"scripts": {
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"docker:build:city-api": "docker build -t city-api -f entry_points/city_api/docker/Dockerfile .",
+		"docker:run:city-api": "docker run -p 80:80 --env-file ./src/city/shared/env/production.env -d city-api"
 	},
 	"devDependencies": {
 		"babel-eslint": "10.1.0",

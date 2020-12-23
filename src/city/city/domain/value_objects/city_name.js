@@ -1,6 +1,7 @@
 const _ = require('lodash')
+const Chance = require('chance')
 
-const uuid = require('shared_kernel/uuid')
+const chance = new Chance()
 
 const ValueObject = require('shared_kernel/value_objects/value_object')
 
@@ -8,36 +9,28 @@ const ValueObject = require('shared_kernel/value_objects/value_object')
 /*                       Exceptions                       */
 /* ====================================================== */
 
-// function idError({ value, message = '' } = {}) {
-// 	return errors.badRequest({ errorCode: 'invalid-id', value, message })
-// }
+function cityNameError() {}
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
-class Id extends ValueObject {
+class CityName extends ValueObject {
 	constructor(value = '') {
-		if (!_.isString(value) || !uuid.isValid(value)) {
-			// throw idError({ value })
+		// TODO: refine the max length for the city name
+		if (!_.isString(value) || _.isEmpty(value) || value.length > 50) {
+			throw cityNameError({ value })
 		}
 		super(value)
 	}
 
 	static random() {
-		return new this(uuid.generateUUID())
-	}
-
-	static isValid(value) {
-		return uuid.isValid(value)
+		return new this(chance.city())
 	}
 }
 
 /* ====================================================== */
-/*                        Public API                      */
+/*                      Public API                        */
 /* ====================================================== */
 
-module.exports = {
-	Id,
-	// idError
-}
+module.exports = { CityName, cityNameError }

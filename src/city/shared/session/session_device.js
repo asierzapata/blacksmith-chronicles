@@ -1,10 +1,8 @@
 const _ = require('lodash')
 const chance = require('chance').Chance()
-const UAParser = require('ua-parser-js')
 
 const ValueObject = require('shared_kernel/value_objects/value_object')
-
-const constants = {}
+const { detect } = require('detect-browser')
 
 /* ====================================================== */
 /*                       Exceptions                       */
@@ -15,153 +13,157 @@ const constants = {}
 /* ====================================================== */
 
 const DEFAULT_RANDOM_USER_AGENT =
-	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36'
+	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36'
+
+const platforms = {
+	BROWSER: 'browser',
+	UNKNOWN: 'unknown',
+}
+
+const browsers = [
+	'aol',
+	'edge',
+	'edge-ios',
+	'yandexbrowser',
+	'vivaldi',
+	'kakaotalk',
+	'samsung',
+	'silk',
+	'miui',
+	'beaker',
+	'edge-chromium',
+	'chrome',
+	'chromium-webview',
+	'phantomjs',
+	'crios',
+	'firefox',
+	'fxios',
+	'opera-mini',
+	'opera',
+	'ie',
+	'bb10',
+	'android',
+	'ios',
+	'safari',
+	'facebook',
+	'instagram',
+	'ios-webview',
+	'searchbot',
+]
+
+const operatingSystems = [
+	'iOS',
+	'Android OS',
+	'BlackBerry OS',
+	'Windows Mobile',
+	'Amazon OS',
+	'Windows 3.11',
+	'Windows 95',
+	'Windows 98',
+	'Windows 2000',
+	'Windows XP',
+	'Windows Server 2003',
+	'Windows Vista',
+	'Windows 7',
+	'Windows 8',
+	'Windows 8.1',
+	'Windows 10',
+	'Windows ME',
+	'Open BSD',
+	'Sun OS',
+	'Linux',
+	'Mac OS',
+	'QNX',
+	'BeOS',
+	'OS/2',
+	'Chrome OS',
+]
 
 class SessionDevice extends ValueObject {
 	constructor({
-		platform,
 		userAgent = '',
+		platform = '',
 		name = '',
 		version = '',
-		model = '',
-		type = '',
-		vendor = '',
 		os = '',
-		bundleVersion,
+		screenWidth = null,
+		screenHeight = null,
 	} = {}) {
-		super({
-			platform,
-			userAgent,
-			name,
-			version,
-			model,
-			type,
-			vendor,
-			os,
-			bundleVersion,
-		})
+		super({ userAgent, platform, name, version, os, screenWidth, screenHeight })
 	}
 
 	// Named constructors
 	// ------------------
-	static ios({ version = '', model = '' }) {
-		const platform = constants.PLATFORM_TYPES.IOS
+
+	static browserUserAgent({ userAgent = '', screenWidth = null, screenHeight = null }) {
+		if (!userAgent) {
+			return new this({
+				userAgent: '',
+				platform: platforms.BROWSER,
+				name: '',
+				version: '',
+				os: '',
+				screenWidth,
+				screenHeight,
+			})
+		}
+		const browser = detect(userAgent)
+		if (!browser) {
+			return new this({
+				userAgent,
+				platform: platforms.BROWSER,
+				screenWidth,
+				screenHeight,
+			})
+		}
 		return new this({
-			platform,
-			userAgent: '',
-			name: constants.PLATFORM_NAMES.IOS_APP,
-			version,
-			type: _.includes(_.toLower(model), 'iphone') ? 'mobile' : 'tablet',
-			vendor: 'Apple',
-			model,
-			os: 'iOS',
-		})
-	}
-
-	static iosReactNative({ version = '', model = '', bundleVersion = '' }) {
-		const platform = constants.PLATFORM_TYPES.IOS
-
-		return new this({
-			platform,
-			userAgent: '',
-			name: constants.PLATFORM_NAMES.IOS_REACT_NATIVE_APP,
-			version,
-			type: _.includes(_.toLower(model), 'iphone') ? 'mobile' : 'tablet',
-			vendor: 'Apple',
-			model,
-			os: 'iOS',
-			bundleVersion,
-		})
-	}
-
-	static android({ version = '', model = '' }) {
-		const platform = constants.PLATFORM_TYPES.ANDROID
-		return new this({
-			platform,
-			userAgent: '',
-			name: constants.PLATFORM_NAMES.ANDROID_APP,
-			version,
-			type: 'mobile',
-			vendor: '',
-			model,
-			os: 'Android',
-		})
-	}
-
-	static androidReactNative({ version = '', model = '', bundleVersion = '' }) {
-		const platform = constants.PLATFORM_TYPES.ANDROID
-		return new this({
-			platform,
-			userAgent: '',
-			name: constants.PLATFORM_NAMES.ANDROID_REACT_NATIVE_APP,
-			version,
-			type: 'mobile',
-			vendor: '',
-			model,
-			os: 'Android',
-			bundleVersion,
-		})
-	}
-
-	static web({ userAgent = '', bundleVersion = '' }) {
-		const platform = constants.PLATFORM_TYPES.WEB
-		if (!userAgent || _.includes(userAgent, 'node-superagent'))
-			return new this({ platform })
-
-		const userAgentData = new UAParser(userAgent).getResult() // { browser: {}, device: {}, os: {}, ...}
-		if (_.isEmpty(userAgentData)) return new this({ platform, userAgent })
-
-		return new this({
-			platform,
 			userAgent,
-			name: userAgentData.browser.name,
-			version: userAgentData.browser.version,
-			bundleVersion,
-			type: userAgentData.device.type,
-			vendor: userAgentData.device.vendor,
-			model: userAgentData.device.model,
-			os: userAgentData.os.name,
+			platform: platforms.BROWSER,
+			name: browser.name,
+			version: browser.version,
+			os: browser.os,
+			screenWidth,
+			screenHeight,
 		})
 	}
 
 	static undetectable() {
-		return new this({ platform: '' })
-	}
-
-	static detect({ platform, userAgent, version, model, bundleVersion }) {
-		// iOS
-		// ---
-		if (platform === constants.PLATFORM_TYPES.IOS && bundleVersion) {
-			return this.iosReactNative({ version, model, bundleVersion })
-		}
-		if (platform === constants.PLATFORM_TYPES.IOS) return this.ios({ version, model })
-
-		// Android
-		// -------
-		if (platform === constants.PLATFORM_TYPES.ANDROID && bundleVersion) {
-			return this.androidReactNative({ version, model, bundleVersion })
-		}
-		if (platform === constants.PLATFORM_TYPES.ANDROID)
-			return this.android({ version, model })
-
-		// Web
-		// ---
-		if (platform === constants.PLATFORM_TYPES.WEB)
-			return this.web({ userAgent, bundleVersion })
-
-		return this.undetectable()
+		return new this({
+			userAgent: '',
+			platform: '',
+			name: '',
+			version: '',
+			os: '',
+			screenWidth: null,
+			screenHeight: null,
+		})
 	}
 
 	static random({
-		platform = chance.pickone(_.values(constants.PLATFORM_TYPES)),
 		userAgent = DEFAULT_RANDOM_USER_AGENT,
-		version = `${chance.natural({ max: 20 })}.${chance.natural({
-			max: 20,
-		})}.${chance.natural({ max: 20 })}`,
-		model = chance.pickone(['iPhone', 'iPad', 'Samsung S20', 'Macbook Pro 16']),
-		bundleVersion = chance.pickone(['2.2.2', undefined]),
+		platform = chance.pickone(_.values(platforms)),
+		name = chance.pickone(browsers),
+		version = chance.hash({ length: 5 }),
+		os = chance.pickone(operatingSystems),
+		screenWidth = chance.integer({ min: 380, max: 1080 }),
+		screenHeight = chance.integer({ min: 200, max: 780 }),
 	} = {}) {
-		return this.detect({ platform, userAgent, version, model, bundleVersion })
+		return new this({
+			userAgent,
+			platform,
+			name,
+			version,
+			os,
+			screenWidth,
+			screenHeight,
+		})
+	}
+
+	// Methods
+	// -------
+
+	isDetected() {
+		return !!this._value.latitude
 	}
 }
 
