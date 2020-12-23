@@ -1,5 +1,6 @@
+// const dynamo = require('dynamodb')
+const aws = require('aws-sdk')
 const containerFactory = require('shared_kernel/container_factory')
-const Database = require('city/shared/infrastructure/persistence/mongodb/db')
 
 const envVars = require('city/shared/env')
 const { Session } = require('city/shared/session/session')
@@ -51,17 +52,15 @@ class Application {
 
 	async start() {
 		try {
-			// const databaseConnection = new Database({
-			// 	url: envVars.mongo.url,
-			// 	name: envVars.mongo.databaseName,
-			// 	logger: new Logger({
-			// 		name: LOGGER_SOURCES.MONGO_DB,
-			// 		enabled: !envVars.isTesting && envVars.logging.enabled,
-			// 		level: envVars.logging.level,
-			// 		prettyPrint: envVars.isDevelopment,
-			// 	}),
-			// })
-			// const { db } = await databaseConnection.connect()
+			const dynamodb = new aws.DynamoDB({
+				accessKeyId: envVars.aws.dynamodb.accessKey,
+				secretAccessKey: envVars.aws.dynamodb.secretAccessKey,
+				apiVersion: '2012-08-10',
+				region: 'eu-west-2',
+			})
+			const db = new aws.DynamoDB.DocumentClient({
+				service: dynamodb,
+			})
 
 			const logger = new Logger({
 				name: LOGGER_SOURCES.APPLICATION,
@@ -76,10 +75,6 @@ class Application {
 				eventBus: [eventHandlerLoggingBusMiddleware, errorBusMiddleware],
 			}
 
-			const onDestroy = () => {
-				// databaseConnection.disconnect()
-			}
-
 			const {
 				commandBus,
 				queryBus,
@@ -91,11 +86,10 @@ class Application {
 			} = await containerFactory.createContainer({
 				modules,
 				middlewares,
-				// db,
+				db,
 				logger,
 				envVars,
 				sessionValueObject: Session,
-				onDestroy,
 			})
 
 			this.destroy = destroy

@@ -45,6 +45,9 @@ const {
 	GetCitiesByUserIdQuery,
 	handleGetCitiesByUserIdQuery,
 } = require('city/city/application/get_cities_by_user_id/get_cities_by_user_id_query_handler')
+const {
+	DynamoDBCityRepository,
+} = require('./infrastructure/repositories/dynamodb_city_repository')
 
 // Event Handlers
 // --------------
@@ -84,8 +87,8 @@ module.exports = {
 /*                     Implementation                     */
 /* ====================================================== */
 
-function getDependencyResolver({ db, env }) {
+function getDependencyResolver({ db, envVars }) {
 	return () => ({
-		cityRepository: new MemoryCityRepository({ db, env }),
+		cityRepository: new DynamoDBCityRepository({ db, envVars }),
 	})
 }

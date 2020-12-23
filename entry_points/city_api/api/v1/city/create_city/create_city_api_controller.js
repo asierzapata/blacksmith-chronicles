@@ -13,7 +13,7 @@ async function createCity(req, res, next) {
 		const cityResponse = await req.commandBus.handle(
 			CreateCityCommand.create({
 				cityId: req.body.cityId,
-				userId: req.session.distinctId,
+				userId: 'b854a860-85c0-40a3-abbe-3c9684138891', // req.session.distinctId,
 				session: req.session,
 			})
 		)

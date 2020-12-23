@@ -6,14 +6,14 @@ const Joi = require('joi')
 
 const envVarsSchema = Joi.object({
 	NODE_ENV: Joi.string()
-		.allow(['production', 'staging', 'development', 'testing'])
+		.allow('production', 'staging', 'development', 'testing')
 		.required(),
 	PORT: Joi.number().required(),
 
 	// LOGGING
 	LOGGING_ENABLED: Joi.boolean().required(),
 	LOGGING_LEVEL: Joi.string()
-		.allow(['info', 'fatal', 'error', 'warn', 'info', 'debug'])
+		.allow('info', 'fatal', 'error', 'warn', 'info', 'debug')
 		.required(),
 
 	// AUTHENTICATION
@@ -21,9 +21,13 @@ const envVarsSchema = Joi.object({
 	JWT_EXPIRATION: Joi.string().required(),
 	JWT_SECRET: Joi.string().required(),
 	JWT_COOKIE_NAME: Joi.string().required(),
+
+	// DYNAMODB
+	AWS_DYNAMODB_ACCESS_KEY: Joi.string().required(),
+	AWS_DYNAMODB_SECRET_ACCESS_KEY: Joi.string().required(),
 })
 
-const { error, value: envVars } = Joi.validate(process.env, envVarsSchema, {
+const { error, value: envVars } = envVarsSchema.validate(process.env, {
 	allowUnknown: true,
 })
 
@@ -55,6 +59,12 @@ module.exports = {
 			expiration: envVars.JWT_EXPIRATION,
 			secret: envVars.JWT_SECRET,
 			cookieName: envVars.JWT_COOKIE_NAME,
+		},
+	},
+	aws: {
+		dynamodb: {
+			accessKey: envVars.AWS_DYNAMODB_ACCESS_KEY,
+			secretAccessKey: envVars.AWS_DYNAMODB_SECRET_ACCESS_KEY,
 		},
 	},
 }

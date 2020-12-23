@@ -36,7 +36,7 @@ async function createContainer({
 	logger,
 	envVars,
 	sessionValueObject,
-	onDestroy,
+	onDestroy = _.noop,
 }) {
 	if (_.isEmpty(modules)) throw new Error('There should be at least one module')
 

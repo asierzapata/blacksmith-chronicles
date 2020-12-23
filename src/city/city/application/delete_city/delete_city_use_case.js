@@ -7,19 +7,19 @@
 /* ====================================================== */
 
 async function deleteCityUseCase({ cityId, name }, { cityRepository, eventBus }) {
-	const [city] = cityRepository.findByIds([cityId])
+	const [city] = await cityRepository.findByIds([cityId])
 
 	if (!city) {
 		// TODO: throw error for city not found
 	}
 
-	const deletedCity = await city.delete(name)
-	await cityRepository.save(deletedCity)
+	await city.delete(name)
+	await cityRepository.remove(city)
 
-	const events = deletedCity.pullDomainEvents()
+	const events = city.pullDomainEvents()
 	await eventBus.publish(events, { sync: false })
 
-	return deletedCity
+	return city
 }
 
 /* ====================================================== */
