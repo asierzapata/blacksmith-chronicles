@@ -3,7 +3,7 @@ const assert = require('assert')
 const expressPinoLogger = require('express-pino-logger')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const yes = require('yes-https')
+// const yes = require('yes-https')
 const helmet = require('helmet')
 const cors = require('cors')
 
@@ -47,7 +47,7 @@ class Server {
 
 		this.app.set('port', env.PORT)
 
-		this.app.use(yes())
+		// this.app.use(yes())
 		this.app.use(helmet())
 		this.app.use(bodyParser.json())
 		this.app.use(bodyParser.urlencoded({ extended: false }))
