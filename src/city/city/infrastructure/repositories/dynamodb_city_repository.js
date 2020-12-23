@@ -29,8 +29,8 @@ const DATABASE_VALID_QUERY_FIELDS = {
 	[ENTITY_FIELDS_TO_DATABASE_MAPPING.userId]: true,
 	[ENTITY_FIELDS_TO_DATABASE_MAPPING.name]: true,
 	[ENTITY_FIELDS_TO_DATABASE_MAPPING.location]: true,
-	[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt]: false,
-	[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt]: false,
+	[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt]: true,
+	[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt]: true,
 }
 
 /* ====================================================== */
@@ -167,10 +167,14 @@ function toEntity(data) {
 				name: new CityName(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.name]),
 				location: new CityLocation(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.location]),
 				createdAt: data[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt]
-					? new NullableTimestamp(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt])
+					? new NullableTimestamp(
+							new Date(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt])
+					  )
 					: NullableTimestamp.never(),
 				updatedAt: data[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt]
-					? new NullableTimestamp(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt])
+					? new NullableTimestamp(
+							new Date(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt])
+					  )
 					: NullableTimestamp.never(),
 			},
 			{ isNew: false }
@@ -193,7 +197,7 @@ function toDatabase(city) {
 		[ENTITY_FIELDS_TO_DATABASE_MAPPING.userId]: city.getUserId().toValue(),
 		[ENTITY_FIELDS_TO_DATABASE_MAPPING.name]: city.getName().toValue(),
 		[ENTITY_FIELDS_TO_DATABASE_MAPPING.location]: city.getLocation().toValue(),
-		[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt]: city.getCreatedAt().toValue(),
-		[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt]: city.getUpdatedAt().toValue(),
+		[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt]: city.getCreatedAt().toISOString(),
+		[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt]: city.getUpdatedAt().toISOString(),
 	}
 }
