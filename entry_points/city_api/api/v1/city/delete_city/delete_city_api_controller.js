@@ -25,16 +25,16 @@ const ERROR_STATUS_MAPPING = {
 
 async function deleteCity(req, res, next) {
 	try {
-		const reponse = await req.commandBus.handle(
+		const response = await req.commandBus.handle(
 			DeleteCityCommand.create({
 				cityId: checkString(req.params.cityId),
 				session: req.session,
 			})
 		)
-		if (!_.isEmpty(reponse.errors)) {
+		if (!_.isEmpty(response.errors)) {
 			return errorReponse({
 				res,
-				errors: reponse.errors,
+				errors: response.errors,
 				errorsStatusMapping: ERROR_STATUS_MAPPING,
 			})
 		}
