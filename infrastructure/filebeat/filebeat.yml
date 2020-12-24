@@ -11,4 +11,6 @@ filebeat.registry.path: /var/lib/filebeat
 output:
   elasticsearch:
     hosts:
-      ['https://vpc-staging-game-uxkfmxrpt742ihwgawvebv7mji.eu-west-2.es.amazonaws.com']
+      [
+        'https://vpc-staging-game-uxkfmxrpt742ihwgawvebv7mji.eu-west-2.es.amazonaws.com:443',
+      ]
