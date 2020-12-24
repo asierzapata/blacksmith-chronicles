@@ -1,7 +1,4 @@
-FROM node:erbium-alpine3.10
-
-# Create app directory
-WORKDIR /app
+FROM alpine:3.10
 
 ENV FILEBEAT_VERSION=6.1.1
 
@@ -21,5 +18,5 @@ COPY certFileBeat.cert /filebeat/cert.cert
 COPY filebeat.yml /filebeat/filebeat.yml
 RUN chmod go-w /filebeat/filebeat.yml
 
-# We force the container to continue running after the service is up that it will not exit right-away
-CMD service filebeat start; tail -f /dev/null
+WORKDIR /filebeat/
+CMD ["filebeat","-e","-c", "filebeat.yml"]

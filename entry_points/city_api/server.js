@@ -21,6 +21,7 @@ const authenticationMiddleware = require('city_api/middlewares/authentication')
 /*                        Routes                          */
 /* ====================================================== */
 
+const health = require('city_api/health')
 const api = require('city_api/api')
 const { ApplicationError } = require('shared_kernel/errors/application_error')
 const { errorReponse } = require('./utils/responses_factory')
@@ -135,6 +136,7 @@ class Server {
 		// API
 		// -----
 
+		router.use('/health', health)
 		router.use('/api', api)
 
 		// Error Handling
