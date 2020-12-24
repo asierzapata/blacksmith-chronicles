@@ -1,40 +1,59 @@
+const _ = require('lodash')
+
+const { successReponse, errorReponse } = require('city_api/utils/responses_factory')
+const { checkString } = require('city_api/utils/input_validators')
+const {
+	InvalidInputStringError,
+} = require('city_api/utils/input_validators/errors/invalid_input_string_error')
+
 /* ====================================================== */
 /*                        Module                          */
 /* ====================================================== */
 
 const { CreateCityCommand } = require('city/city')
+const {
+	CityAlreadyExistsError,
+} = require('city/city/domain/errors/city_already_exists_error')
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
+const ERROR_STATUS_MAPPING = {
+	[CityAlreadyExistsError.name]: 409,
+	[InvalidInputStringError.name]: 400,
+}
+
 async function createCity(req, res, next) {
 	try {
 		const cityResponse = await req.commandBus.handle(
 			CreateCityCommand.create({
-				cityId: req.body.cityId,
+				cityId: checkString(req.body.cityId),
 				userId: req.session.distinctId,
 				session: req.session,
 			})
 		)
-		return res.status(201).json({
-			data: {
-				cities: cityResponse.data.cities,
-			},
-			meta: {},
+		if (!_.isEmpty(cityResponse.errors)) {
+			return errorReponse({
+				res,
+				errors: cityResponse.errors,
+				errorsStatusMapping: ERROR_STATUS_MAPPING,
+			})
+		}
+		return successReponse({
+			res,
+			statusCode: 201,
+			data: { cities: cityResponse.data.cities },
 		})
-	} catch (err) {
-		return next(err)
-		// // TODO: Ask santi about error switching with constructor and error code
-		// if (!err.getErrorCode) return next(err)
-
-		// const errorCode = err.getErrorCode()
-		// switch (errorCode) {
-		// 	case invalidInputStringError().getErrorCode():
-		// 		return next(errors.badRequest(err))
-		// 	default:
-		// 		return next(errors.internalServer(err))
-		// }
+	} catch (error) {
+		if (error.toValue) {
+			return errorReponse({
+				res,
+				errors: [error],
+				errorsStatusMapping: ERROR_STATUS_MAPPING,
+			})
+		}
+		return next(error)
 	}
 }
 

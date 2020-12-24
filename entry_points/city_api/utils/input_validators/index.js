@@ -1,14 +1,21 @@
+const {
+	InvalidInputStringError,
+} = require('city_api/utils/input_validators/errors/invalid_input_string_error')
+const {
+	InvalidInputBooleanError,
+} = require('city_api/utils/input_validators/errors/invalid_input_boolean_error')
+const {
+	InvalidInputNumberError,
+} = require('city_api/utils/input_validators/errors/invalid_input_number_error')
+
 /* ====================================================== */
 /*                      Public API                        */
 /* ====================================================== */
 
 module.exports = {
 	checkString,
-	invalidInputStringError,
 	checkNumber,
-	invalidInputNumberError,
 	checkBoolean,
-	invalidInputBooleanError,
 }
 
 /* ====================================================== */
@@ -17,41 +24,33 @@ module.exports = {
 
 function checkString(inputString) {
 	// Check var type
-	if (typeof inputString !== 'string') throw invalidInputStringError()
+	if (typeof inputString !== 'string') throw InvalidInputStringError.create()
 
 	// Maximum 1MB strings. 1 character = 1 byte
 	if (inputString.length > 1 * 1024 * 1024)
-		throw invalidInputStringError({ message: 'Input String is too long' })
+		throw InvalidInputStringError.create({ message: 'Input String is too long' })
+
+	if (inputString.length === 0) {
+		throw InvalidInputStringError.create({ message: 'Input String is empty' })
+	}
 
 	return inputString
 }
 
-function invalidInputStringError({ message = 'Invalid String provided' } = {}) {
-	return new Error(message)
-}
-
 function checkNumber(inputNumber) {
 	// Check var type
-	if (typeof inputNumber !== 'number') throw invalidInputNumberError()
+	if (typeof inputNumber !== 'number') throw InvalidInputNumberError.create()
 
 	// Only finite numbers allowed
 	if (Number.isNaN(inputNumber) || inputNumber === Infinity || inputNumber === -Infinity)
-		throw invalidInputNumberError({ message: 'Input Number is not finite' })
+		throw InvalidInputNumberError.create({ message: 'Input Number is not finite' })
 
 	return inputNumber
 }
 
-function invalidInputNumberError({ message = 'Invalid Number provided' } = {}) {
-	return new Error(message)
-}
-
 function checkBoolean(inputBoolean) {
 	// Check var type
-	if (typeof inputBoolean !== 'boolean') throw invalidInputBooleanError()
+	if (typeof inputBoolean !== 'boolean') throw InvalidInputBooleanError.create()
 
 	return inputBoolean
-}
-
-function invalidInputBooleanError({ message = 'Invalid Boolean provided' } = {}) {
-	return new Error(message)
 }

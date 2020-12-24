@@ -3,7 +3,6 @@ const assert = require('assert')
 const expressPinoLogger = require('express-pino-logger')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-// const yes = require('yes-https')
 const helmet = require('helmet')
 const cors = require('cors')
 
@@ -23,6 +22,8 @@ const authenticationMiddleware = require('city_api/middlewares/authentication')
 /* ====================================================== */
 
 const api = require('city_api/api')
+const { ApplicationError } = require('shared_kernel/errors/application_error')
+const { errorReponse } = require('./utils/responses_factory')
 
 /* ====================================================== */
 /*                     Implementation                     */
@@ -47,7 +48,6 @@ class Server {
 
 		this.app.set('port', env.PORT)
 
-		// this.app.use(yes())
 		this.app.use(helmet())
 		this.app.use(bodyParser.json())
 		this.app.use(bodyParser.urlencoded({ extended: false }))
@@ -64,7 +64,7 @@ class Server {
 			name: LOGGER_SOURCES.HTTP_API,
 			enabled: !env.isTesting && env.logging.enabled,
 			level: env.logging.level,
-			prettyPrint: !env.isProduction && !env.isStaging,
+			prettyPrint: env.isDevelopment,
 		})
 
 		const router = express.Router()
@@ -142,76 +142,19 @@ class Server {
 
 		this.app.use(router)
 
-		// // 1. Error Handling middleware is for making sure the error has the CORRECT FORMAT
-		// this.app.use((err, req, res, next) => {
-		// 	let error = err
-		// 	// If it's not an Application error => Convert it to an 'uncaught' error
-		// 	if (!errors.isApplicationError(err)) {
-		// 		error = errors.uncaught(err)
-		// 	}
+		// eslint-disable-next-line no-unused-vars
+		this.app.use((err, req, res, next) => {
+			let error = err
+			if (!error.toValue) {
+				error = ApplicationError.Programmer({
+					name: error.name,
+					message: error.message,
+					error,
+				})
+			}
 
-		// 	if (error.addCustomAttributes) {
-		// 		// Add more information to the error
-		// 		error.addCustomAttributes({
-		// 			method: req.method,
-		// 			url: req.originalUrl,
-		// 			referer: req.headers.referer,
-		// 			params: req.params,
-		// 			body: req.body,
-		// 			query: req.query,
-		// 		})
-		// 	}
-
-		// 	return next(error)
-		// })
-
-		// // 2. Error Handling middleware is for ALERTING New Relic and RESPONDING (if necessary)
-		// this.app.use((err, req, res, next) => {
-		// 	const customParameters = errors.getLogFormat(err)
-
-		// 	// If the error happened after responding => log to New Relic as an error
-		// 	if (res.headersSent) {
-		// 		customParameters.background = 1
-		// 		newrelic.noticeError(err, customParameters)
-		// 		// Delegate to the default error handling mechanisms in Express
-		// 		return next(err)
-		// 	}
-
-		// 	// If not replied yet, add custom parameters to NR Transaction
-		// 	_.each(customParameters, (value, name) => {
-		// 		newrelic.addCustomAttribute(name, value)
-		// 	})
-
-		// 	// If the error should be alerted => log to New Relic as an error
-		// 	if (err.shouldAlert) {
-		// 		newrelic.noticeError(err, customParameters)
-		// 	}
-
-		// 	// Message to be returned
-		// 	let message = err.message
-		// 	if (errors.isServerError(err)) {
-		// 		// For Server Errors we just send a standard message.
-		// 		// This is to avoid sending internal information about our system.
-		// 		message = 'Internal Server Error'
-		// 	}
-
-		// 	// We finally reply with the error message
-		// 	res.status(err.statusCode).json({
-		// 		errors: [
-		// 			{
-		// 				id: err.id,
-		// 				message,
-		// 				code: err.getErrorCode(),
-		// 			},
-		// 		],
-		// 		data: {},
-		// 		meta: {},
-		// 	})
-
-		// 	// For server errors, we call next(err) to delegate to the default error
-		// 	// handling mechanisms in Express
-		// 	if (errors.isServerError(err) && !err.testError) return next(err)
-		// })
+			return errorReponse({ res, errors: [error] })
+		})
 
 		// In testing we don't actually need the http server
 		// to start in order to test the app

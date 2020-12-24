@@ -2,6 +2,8 @@
 /*                         Domain                         */
 /* ====================================================== */
 
+const { CityNotFoundError } = require('city/city/domain/errors/city_not_found_error')
+
 /* ====================================================== */
 /*                       Command                          */
 /* ====================================================== */
@@ -10,7 +12,7 @@ async function renameCityUseCase({ cityId, name }, { cityRepository, eventBus })
 	const [city] = await cityRepository.findByIds([cityId])
 
 	if (!city) {
-		// TODO: throw error for city not found
+		throw CityNotFoundError.create()
 	}
 
 	await city.rename(name)
