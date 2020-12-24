@@ -1,0 +1,19 @@
+filebeat.inputs:
+- type: log
+    paths:
+      -  /tmp/LogDir/*.log
+    fields:
+      logzio_codec: json
+      token: ********
+      type: plain
+    fields_under_root: true
+    encoding: utf-8
+    ignore_older: 3h
+#For version 7 and higher
+filebeat.registry.path: /var/lib/filebeat
+################## Output #####################
+output:
+  logstash:
+    hosts: ["listener.logz.io:5015"]
+    # ssl:
+    #   certificate_authorities: ['/etc/filebeat/cert.cert']

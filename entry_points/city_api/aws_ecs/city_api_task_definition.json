@@ -10,7 +10,15 @@
 					"type": "s3"
 				}
 			],
-			"logConfiguration": null,
+			"logConfiguration": {
+				"logDriver": "awslogs",
+				"secretOptions": null,
+				"options": {
+					"awslogs-group": "/ecs/city-api",
+					"awslogs-region": "eu-west-2",
+					"awslogs-stream-prefix": "ecs"
+				}
+			},
 			"entryPoint": null,
 			"portMappings": [
 				{
@@ -21,20 +29,26 @@
 			],
 			"command": null,
 			"linuxParameters": null,
-			"cpu": 256,
+			"cpu": 384,
 			"environment": [],
 			"resourceRequirements": null,
 			"ulimits": null,
 			"dnsServers": null,
-			"mountPoints": [],
+			"mountPoints": [
+				{
+					"readOnly": null,
+					"containerPath": "/tmp/LogDir",
+					"sourceVolume": "LogDir"
+				}
+			],
 			"workingDirectory": null,
 			"secrets": null,
 			"dockerSecurityOptions": null,
-			"memory": 512,
-			"memoryReservation": null,
+			"memory": null,
+			"memoryReservation": 896,
 			"volumesFrom": [],
 			"stopTimeout": null,
-			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/city-api:1",
+			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/city-api:6058d10aecebdd952a97e707d564b3ed4b1c8258",
 			"startTimeout": null,
 			"firelensConfiguration": null,
 			"dependsOn": null,
@@ -58,17 +72,81 @@
 			"systemControls": null,
 			"privileged": null,
 			"name": "city-api"
+		},
+		{
+			"dnsSearchDomains": null,
+			"environmentFiles": null,
+			"logConfiguration": {
+				"logDriver": "awslogs",
+				"secretOptions": null,
+				"options": {
+					"awslogs-group": "/ecs/city-api",
+					"awslogs-region": "eu-west-2",
+					"awslogs-stream-prefix": "ecs"
+				}
+			},
+			"entryPoint": null,
+			"portMappings": [],
+			"command": null,
+			"linuxParameters": null,
+			"cpu": 128,
+			"environment": [],
+			"resourceRequirements": null,
+			"ulimits": null,
+			"dnsServers": null,
+			"mountPoints": [
+				{
+					"readOnly": null,
+					"containerPath": "/tmp/LogDir",
+					"sourceVolume": "LogDir"
+				}
+			],
+			"workingDirectory": null,
+			"secrets": null,
+			"dockerSecurityOptions": null,
+			"memory": null,
+			"memoryReservation": 128,
+			"volumesFrom": [],
+			"stopTimeout": null,
+			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/filebeat:latest",
+			"startTimeout": null,
+			"firelensConfiguration": null,
+			"dependsOn": null,
+			"disableNetworking": null,
+			"interactive": null,
+			"healthCheck": null,
+			"essential": true,
+			"links": null,
+			"hostname": null,
+			"extraHosts": null,
+			"pseudoTerminal": null,
+			"user": null,
+			"readonlyRootFilesystem": null,
+			"dockerLabels": null,
+			"systemControls": null,
+			"privileged": null,
+			"name": "filebeat"
 		}
 	],
 	"placementConstraints": [],
-	"memory": "512",
+	"memory": "1024",
 	"taskRoleArn": "arn:aws:iam::685327678254:role/ecsTaskExecutionRole",
 	"family": "city-api",
 	"pidMode": null,
 	"requiresCompatibilities": ["FARGATE"],
 	"networkMode": "awsvpc",
-	"cpu": "256",
+	"cpu": "512",
 	"inferenceAccelerators": null,
 	"proxyConfiguration": null,
-	"volumes": []
+	"volumes": [
+		{
+			"fsxWindowsFileServerVolumeConfiguration": null,
+			"efsVolumeConfiguration": null,
+			"name": "LogDir",
+			"host": {
+				"sourcePath": null
+			},
+			"dockerVolumeConfiguration": null
+		}
+	]
 }

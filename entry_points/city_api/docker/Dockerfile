@@ -8,4 +8,4 @@ WORKDIR /app/city_api
 RUN yarn install --frozen-lockfile
 
 EXPOSE 80
-CMD ["node", "index.js"]
+CMD node index.js 2>&1 | tee /tmp/LogDir/output.log
