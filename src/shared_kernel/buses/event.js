@@ -15,7 +15,7 @@ class Event {
 	constructor({
 		id = uuid.generateUUID(),
 		type = '',
-		version = 0,
+		version = 1,
 		occurredOn = Timestamp.now().toISOString(),
 		attributes = {},
 		meta = {},

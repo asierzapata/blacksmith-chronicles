@@ -6,6 +6,8 @@ const _ = require('lodash')
 
 const { City } = require('city/city/domain/aggregate/city_aggregate')
 
+const { ApplicationError } = require('shared_kernel/errors/application_error')
+
 /* ====================================================== */
 /*                      Public API                        */
 /* ====================================================== */
@@ -33,9 +35,7 @@ function dataResponse({ cities, meta = {} }) {
 }
 function errorResponse({ errors, meta = {} }) {
 	return {
-		data: {
-			errors: _convertErrors(errors),
-		},
+		errors: _convertErrors(errors),
 		meta: { ...meta, module: 'city.city' },
 	}
 }
@@ -60,12 +60,8 @@ function _convertCities(cities) {
 function _convertError(error) {
 	if (!error) return
 
-	// TODO: change this once we refactor the errors
-	return {
-		name: error.name,
-		message: error.message,
-		code: error.code,
-	}
+	if (error.toValue) return error.toValue()
+	return ApplicationError.Programmer({ name: error.name, message: error.message, error })
 }
 
 function _convertErrors(cities) {
@@ -80,6 +76,6 @@ function randomSuccessResponse(cities) {
 
 function randomErrorResponse(errors) {
 	return errorResponse({
-		errors: errors || _.times(_.random(1, 10), () => new Error()),
+		errors: errors || _.times(_.random(1, 10), () => new Error('Random error')),
 	})
 }
