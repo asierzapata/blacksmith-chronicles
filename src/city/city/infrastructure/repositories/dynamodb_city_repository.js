@@ -50,6 +50,7 @@ class DynamoDBCityRepository {
 
 	async findByIds(cityIds) {
 		const cityIdsValues = _.map(cityIds, (cityId) => cityId.toValue())
+
 		const query = {
 			RequestItems: {
 				[this.table]: {
@@ -57,9 +58,9 @@ class DynamoDBCityRepository {
 				},
 			},
 		}
-
 		const { Responses } = await this.db.batchGet(query).promise()
 		const result = Responses[this.table]
+
 		return toEntities(_.values(result))
 	}
 
@@ -191,7 +192,7 @@ function toEntities(data = []) {
 
 function toDatabase(city) {
 	if (_.isEmpty(city)) return
-
+	console.log('>>>>>> city', city)
 	return {
 		[ENTITY_FIELDS_TO_DATABASE_MAPPING.id]: city.getId().toValue(),
 		[ENTITY_FIELDS_TO_DATABASE_MAPPING.userId]: city.getUserId().toValue(),

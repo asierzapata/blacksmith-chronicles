@@ -1,4 +1,5 @@
-const { checkString } = require('city_api/utils/input_validators')
+const _ = require('lodash')
+const { checkString, checkNumber } = require('city_api/utils/input_validators')
 
 /* ====================================================== */
 /*                        Module                          */
@@ -15,9 +16,19 @@ async function relocateCity(req, res, next) {
 		const cityResponse = await req.commandBus.handle(
 			RelocateCityCommand.create({
 				cityId: checkString(req.params.cityId),
+				location: {
+					x: checkNumber(req.body.location.x),
+					y: checkNumber(req.body.location.y),
+				},
 				session: req.session,
 			})
 		)
+		if (!_.isEmpty(cityResponse.data.errors)) {
+			return res.status(500).json({
+				errors: [...cityResponse.data.errors],
+				meta: {},
+			})
+		}
 		return res.status(201).json({
 			data: {
 				cities: cityResponse.data.cities,
@@ -25,17 +36,7 @@ async function relocateCity(req, res, next) {
 			meta: {},
 		})
 	} catch (err) {
-		return next(err)
-		// // TODO: Ask santi about error switching with constructor and error code
-		// if (!err.getErrorCode) return next(err)
-
-		// const errorCode = err.getErrorCode()
-		// switch (errorCode) {
-		// 	case invalidInputStringError().getErrorCode():
-		// 		return next(errors.badRequest(err))
-		// 	default:
-		// 		return next(errors.internalServer(err))
-		// }
+		next(err)
 	}
 }
 

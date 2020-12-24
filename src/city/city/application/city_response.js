@@ -34,7 +34,7 @@ function dataResponse({ cities, meta = {} }) {
 function errorResponse({ errors, meta = {} }) {
 	return {
 		data: {
-			cities: _convertErrors(errors),
+			errors: _convertErrors(errors),
 		},
 		meta: { ...meta, module: 'city.city' },
 	}
@@ -63,6 +63,8 @@ function _convertError(error) {
 	// TODO: change this once we refactor the errors
 	return {
 		name: error.name,
+		message: error.message,
+		code: error.code,
 	}
 }
 

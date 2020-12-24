@@ -7,19 +7,19 @@
 /* ====================================================== */
 
 async function relocateCityUseCase({ cityId, location }, { cityRepository, eventBus }) {
-	const [city] = cityRepository.findByIds([cityId])
+	const [city] = await cityRepository.findByIds([cityId])
 
 	if (!city) {
 		// TODO: throw error for city not found
 	}
 
-	const relocatedCity = await city.relocate(location)
-	await cityRepository.save(relocatedCity)
+	await city.relocate(location)
+	await cityRepository.save(city)
 
-	const events = relocatedCity.pullDomainEvents()
+	const events = city.pullDomainEvents()
 	await eventBus.publish(events, { sync: false })
 
-	return relocatedCity
+	return city
 }
 
 /* ====================================================== */

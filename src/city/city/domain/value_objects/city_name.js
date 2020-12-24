@@ -9,7 +9,9 @@ const ValueObject = require('shared_kernel/value_objects/value_object')
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function cityNameError() {}
+function cityNameError() {
+	return new Error('invalid city name')
+}
 
 /* ====================================================== */
 /*                    Implementation                      */
