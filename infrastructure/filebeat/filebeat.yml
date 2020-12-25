@@ -1,11 +1,10 @@
-filebeat:
-  # List of prospectors to fetch data.
-  prospectors:
-    # Each - is a prospector. Below are the prospector specific configurations
-    - paths:
-        - /tmp/LogDir/*.log
-        #- c:\programdata\elasticsearch\logs\*
-#For version 7 and higher
+setup.ilm.enabled: false
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /tmp/LogDir/*.log
+
 filebeat.registry.path: /var/lib/filebeat
 ################## Output #####################
 output:
