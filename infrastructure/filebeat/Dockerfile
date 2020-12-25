@@ -14,7 +14,6 @@ RUN apk add --update-cache curl bash libc6-compat && \
 	rm -rf /filebeat/filebeat.yml
 
 RUN mkdir /tmp/LogDir && touch /tmp/LogDir/output.log
-COPY certFileBeat.cert /filebeat/cert.cert
 COPY filebeat.yml /filebeat/filebeat.yml
 RUN chmod go-w /filebeat/filebeat.yml
 

@@ -1,0 +1,15 @@
+setup.ilm.enabled: false
+metricbeat.config.modules:
+  # Glob pattern for configuration loading
+  path: /etc/metricbeat/modules.d/*.yml
+  # Set to true to enable config reloading
+  reload.enabled: false
+  # Period on which files under path should be checked for changes
+  reload.period: 10s
+################## Output #####################
+output:
+  elasticsearch:
+    hosts:
+      [
+        'https://vpc-staging-game-uxkfmxrpt742ihwgawvebv7mji.eu-west-2.es.amazonaws.com:443',
+      ]
