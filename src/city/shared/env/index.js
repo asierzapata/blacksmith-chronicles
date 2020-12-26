@@ -25,6 +25,9 @@ const envVarsSchema = Joi.object({
 	// DYNAMODB
 	AWS_DYNAMODB_ACCESS_KEY: Joi.string().required(),
 	AWS_DYNAMODB_SECRET_ACCESS_KEY: Joi.string().required(),
+
+	// ELASTIC SEARCH
+	AWS_ELASTIC_SEARCH_NODE_URL: Joi.string().required(),
 })
 
 const { error, value: envVars } = envVarsSchema.validate(process.env, {
@@ -65,6 +68,9 @@ module.exports = {
 		dynamodb: {
 			accessKey: envVars.AWS_DYNAMODB_ACCESS_KEY,
 			secretAccessKey: envVars.AWS_DYNAMODB_SECRET_ACCESS_KEY,
+		},
+		elasticSearch: {
+			nodeUrl: envVars.AWS_ELASTIC_SEARCH_NODE_URL,
 		},
 	},
 }

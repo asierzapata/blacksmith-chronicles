@@ -28,6 +28,12 @@ const modules = [cityModule]
 const Server = require('city_api/server')
 const { AuthenticationService } = require('city_api/services/authentication')
 const { GeolocationService } = require('city_api/services/geolocation')
+const {
+	ElasticSearch,
+} = require('shared_kernel/infrastructure/persistence/elastic_search')
+const {
+	ElasticSearchBusMessagesStore,
+} = require('shared_kernel/infrastructure/persistence/bus_messages_store/elastic_search_bus_messages_store')
 
 /* ====================================================== */
 /*                    Implementation                      */
@@ -62,6 +68,16 @@ class Application {
 				service: dynamodb,
 			})
 
+			let busMessagesStore = null
+			if (envVars.isProduction) {
+				const elasticSearchInstance = new ElasticSearch({
+					nodeUrl: envVars.aws.elasticSearch.nodeUrl,
+				})
+				const { elasticSearch } = await elasticSearchInstance.connect()
+
+				busMessagesStore = new ElasticSearchBusMessagesStore({ elasticSearch })
+			}
+
 			const logger = new Logger({
 				name: LOGGER_SOURCES.APPLICATION,
 				enabled: !envVars.isTesting && envVars.logging.enabled,
@@ -87,6 +103,7 @@ class Application {
 				modules,
 				middlewares,
 				db,
+				busMessagesStore,
 				logger,
 				envVars,
 				sessionValueObject: Session,

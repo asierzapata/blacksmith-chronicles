@@ -7,25 +7,27 @@ const { applyMiddleware } = require('shared_kernel/buses/middlewares/apply_middl
 /* ====================================================== */
 
 class SyncInMemoryCommandOrQueryBus {
-	constructor({ middleware = [] }) {
+	constructor({ busMessagesStore, middleware = [] }) {
+		this.busMessagesStore = busMessagesStore
 		this._handle = applyMiddleware(middleware)
 	}
 
-	async handle(...args) {
-		const result = await this._handle(...args)
+	async handle(...commandsOrQueries) {
+		if (this.busMessagesStore) await this.busMessagesStore.save(commandsOrQueries)
+		const result = await this._handle(...commandsOrQueries)
 		return result
 	}
 }
 
 class SyncInMemoryEventBus {
-	constructor({ middleware = [], eventStore, env }) {
-		this.eventStore = eventStore
+	constructor({ middleware = [], busMessagesStore, env }) {
+		this.busMessagesStore = busMessagesStore
 		this._handle = applyMiddleware(middleware)
 		this.isTesting = _.get(env, 'isTesting', false)
 	}
 
 	async publish(events, { sync = true, ...mockedDependencies } = {}) {
-		if (this.eventStore) await this.eventStore.save(events)
+		if (this.busMessagesStore) await this.busMessagesStore.save(events)
 
 		if (!sync && this.isTesting) return
 

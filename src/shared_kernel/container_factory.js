@@ -32,7 +32,7 @@ async function createContainer({
 	startCommandHandling = (handler) => handler(),
 	startQueryHandling = (handler) => handler(),
 	db,
-	eventStore,
+	busMessagesStore,
 	logger,
 	envVars,
 	sessionValueObject,
@@ -131,7 +131,7 @@ async function createContainer({
 	const queryBus = createQueryBus({
 		handlers: container.queryHandlers,
 		middlewares: middlewares.queryBus,
-		dependencies: { envVars, logger, eventStore },
+		dependencies: { envVars, logger, busMessagesStore },
 	})
 
 	const eventBus = createEventBus({
@@ -139,7 +139,7 @@ async function createContainer({
 		middlewares: middlewares.eventBus,
 		sessionValueObject,
 		queryBus,
-		dependencies: { envVars, logger, eventStore },
+		dependencies: { envVars, logger, busMessagesStore },
 	})
 	const commandBus = createCommandBus({
 		handlers: container.commandHandlers,
@@ -147,7 +147,7 @@ async function createContainer({
 		sessionValueObject,
 		queryBus,
 		eventBus,
-		dependencies: { envVars, logger, eventStore },
+		dependencies: { envVars, logger, busMessagesStore },
 	})
 
 	return {
@@ -184,6 +184,7 @@ async function createContainer({
 
 function createQueryBus({ handlers, middlewares, dependencies = {} }) {
 	const queryBus = new SyncInMemoryQueryBus({
+		busMessagesStore: dependencies.busMessagesStore,
 		middleware: [
 			..._.map(middlewares, (middleware) => middleware(dependencies)),
 			() => (query, mockedDependencies = {}) => {
@@ -222,7 +223,7 @@ function createEventBus({
 	dependencies = {},
 }) {
 	const eventBus = new SyncInMemoryEventBus({
-		eventStore: dependencies.eventStore,
+		busMessagesStore: dependencies.busMessagesStore,
 		middleware: [
 			..._.map(middlewares, (middleware) => middleware(dependencies)),
 			() => (event, mockedDependencies = {}) => {
@@ -286,6 +287,7 @@ function createCommandBus({
 	dependencies = {},
 }) {
 	const commandBus = new SyncInMemoryCommandBus({
+		busMessagesStore: dependencies.busMessagesStore,
 		middleware: [
 			..._.map(middlewares, (middleware) => middleware(dependencies)),
 			() => (command, mockedDependencies = {}) => {
