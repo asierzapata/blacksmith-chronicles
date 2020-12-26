@@ -17,7 +17,7 @@ const {
 async function createCityUseCase({ cityId, userId }, { cityRepository, eventBus }) {
 	const [city] = await cityRepository.findByIds([cityId])
 
-	if (!city) {
+	if (city) {
 		throw CityAlreadyExistsError.create()
 	}
 
