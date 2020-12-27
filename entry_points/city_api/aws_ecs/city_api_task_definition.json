@@ -48,7 +48,7 @@
 			"memoryReservation": 896,
 			"volumesFrom": [],
 			"stopTimeout": null,
-			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/city-api:2365437f5a51091dc4e708fbea64e241c7326bfe",
+			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/city-api:7ecd2218db9257a812a0e1c9e5bdc3dfb24c694d",
 			"startTimeout": null,
 			"firelensConfiguration": null,
 			"dependsOn": null,
