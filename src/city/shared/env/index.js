@@ -28,6 +28,7 @@ const envVarsSchema = Joi.object({
 
 	// ELASTIC SEARCH
 	AWS_ELASTIC_SEARCH_NODE_URL: Joi.string().required(),
+	AWS_ELASTIC_SEARCH_API_KEY: Joi.string().required(),
 })
 
 const { error, value: envVars } = envVarsSchema.validate(process.env, {
@@ -71,6 +72,7 @@ module.exports = {
 		},
 		elasticSearch: {
 			nodeUrl: envVars.AWS_ELASTIC_SEARCH_NODE_URL,
+			apiKey: envVars.AWS_ELASTIC_SEARCH_API_KEY,
 		},
 	},
 }
