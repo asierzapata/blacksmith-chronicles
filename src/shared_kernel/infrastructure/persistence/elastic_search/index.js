@@ -6,14 +6,16 @@ const { Client } = require('@elastic/elasticsearch')
 /* ====================================================== */
 
 class ElasticSearch {
-	constructor({ nodeUrl }) {
+	constructor({ nodeUrl, apiKey }) {
 		assert(nodeUrl, 'ElasticSearch - Missing nodeUrl field')
+		assert(apiKey, 'ElasticSearch - Missing apiKey field')
 		this.nodeUrl = nodeUrl
+		this.apiKey = apiKey
 		this.client = null
 	}
 
 	async connect() {
-		this.client = new Client({ node: this.nodeUrl, maxRetries: 5, requestTimeout: 60000 })
+		this.client = new Client({ node: this.nodeUrl, auth: { apiKey: this.apiKey } maxRetries: 5, requestTimeout: 60000 })
 		return {
 			elasticSearch: this.client,
 		}

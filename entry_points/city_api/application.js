@@ -72,9 +72,7 @@ class Application {
 			if (envVars.isProduction) {
 				const elasticSearchInstance = new ElasticSearch({
 					nodeUrl: envVars.aws.elasticSearch.nodeUrl,
-					auth: {
-						apiKey: envVars.aws.elasticSearch.apiKey,
-					},
+					apiKey: envVars.aws.elasticSearch.apiKey,
 				})
 				const { elasticSearch } = await elasticSearchInstance.connect()
 
