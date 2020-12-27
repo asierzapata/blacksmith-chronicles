@@ -6,10 +6,6 @@ filebeat.inputs:
       - /tmp/LogDir/*.log
 
 filebeat.registry.path: /var/lib/filebeat
-################## Output #####################
-output:
-  elasticsearch:
-    hosts:
-      [
-        'https://vpc-staging-game-uxkfmxrpt742ihwgawvebv7mji.eu-west-2.es.amazonaws.com:443',
-      ]
+
+cloud.id: 'The_Smithy_Chronicles:ZXUtd2VzdC0yLmF3cy5jbG91ZC5lcy5pbyRlNGQzOWJhNTQxZmU0MTM2YjMyOTg2OTZhZDQ1ODM3NSQwNDliYTRkYjNlNDk0NzZiOTg3ODExZGYwMTUyZjZmNw=='
+cloud.auth: 'filebeat_setup:${ES_PWD}'
