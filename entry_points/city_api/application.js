@@ -1,5 +1,6 @@
-// const dynamo = require('dynamodb')
+const elasticSearchAPM = require('elastic-apm-node')
 const aws = require('aws-sdk')
+
 const containerFactory = require('shared_kernel/container_factory')
 
 const envVars = require('city/shared/env')
@@ -92,6 +93,37 @@ class Application {
 				eventBus: [eventHandlerLoggingBusMiddleware, errorBusMiddleware],
 			}
 
+			const startEventHandling = (handler, eventType, moduleName) => {
+				const currentSpan = elasticSearchAPM.startSpan(
+					`EventHandler/${moduleName}/${eventType}`,
+					'event',
+					moduleName,
+					eventType
+				)
+				handler()
+				currentSpan.end()
+			}
+			const startCommandHandling = (handler, commandType, moduleName) => {
+				const currentSpan = elasticSearchAPM.startSpan(
+					`CommandHandler/${moduleName}/${commandType}`,
+					'command',
+					moduleName,
+					commandType
+				)
+				handler()
+				currentSpan.end()
+			}
+			const startQueryHandling = (handler, queryType, moduleName) => {
+				const currentSpan = elasticSearchAPM.startSpan(
+					`QueryHandler/${moduleName}/${queryType}`,
+					'query',
+					moduleName,
+					queryType
+				)
+				handler()
+				currentSpan.end()
+			}
+
 			const {
 				commandBus,
 				queryBus,
@@ -103,6 +135,9 @@ class Application {
 			} = await containerFactory.createContainer({
 				modules,
 				middlewares,
+				startEventHandling,
+				startCommandHandling,
+				startQueryHandling,
 				db,
 				busMessagesStore,
 				logger,

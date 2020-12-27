@@ -4,11 +4,12 @@ const dotenv = require('dotenv')
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing')
 	dotenv.config({ path: `../../src/city/shared/env/${process.env.NODE_ENV}.env` })
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'production' && process.env.ENABLE_APM) {
 	elasticSearchAPM.start({
 		// Override service name from package.json
 		// Allowed characters: a-z, A-Z, 0-9, -, _, and space
 		serviceName: 'City API',
+		environment: process.env.NODE_ENV,
 
 		// Use if APM Server requires a token
 		secretToken: process.env.ELASTIC_SEARCH_APM_SECRET_TOKEN,

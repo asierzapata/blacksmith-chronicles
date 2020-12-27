@@ -9,6 +9,7 @@ const envVarsSchema = Joi.object({
 		.allow('production', 'staging', 'development', 'testing')
 		.required(),
 	PORT: Joi.number().required(),
+	ENABLE_APM: Joi.boolean().required(),
 
 	// LOGGING
 	LOGGING_ENABLED: Joi.boolean().required(),
@@ -49,6 +50,7 @@ if (error) {
 module.exports = {
 	NODE_ENV: envVars.NODE_ENV,
 	PORT: envVars.PORT,
+	ENABLE_APM: envVars.ENABLE_APM,
 	isProduction: envVars.NODE_ENV === 'production',
 	isStaging: envVars.NODE_ENV === 'staging',
 	isDevelopment: envVars.NODE_ENV === 'development',
