@@ -93,35 +93,38 @@ class Application {
 				eventBus: [eventHandlerLoggingBusMiddleware, errorBusMiddleware],
 			}
 
-			const startEventHandling = (handler, eventType, moduleName) => {
+			const startEventHandling = async (handler, eventType, moduleName) => {
 				const currentSpan = elasticSearchAPM.startSpan(
 					`EventHandler/${moduleName}/${eventType}`,
 					'event',
 					moduleName,
 					eventType
 				)
-				handler()
+				const result = await handler()
 				currentSpan.end()
+				return result
 			}
-			const startCommandHandling = (handler, commandType, moduleName) => {
+			const startCommandHandling = async (handler, commandType, moduleName) => {
 				const currentSpan = elasticSearchAPM.startSpan(
 					`CommandHandler/${moduleName}/${commandType}`,
 					'command',
 					moduleName,
 					commandType
 				)
-				handler()
+				const result = await handler()
 				currentSpan.end()
+				return result
 			}
-			const startQueryHandling = (handler, queryType, moduleName) => {
+			const startQueryHandling = async (handler, queryType, moduleName) => {
 				const currentSpan = elasticSearchAPM.startSpan(
 					`QueryHandler/${moduleName}/${queryType}`,
 					'query',
 					moduleName,
 					queryType
 				)
-				handler()
+				const result = await handler()
 				currentSpan.end()
+				return result
 			}
 
 			const {
