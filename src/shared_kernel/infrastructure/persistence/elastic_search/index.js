@@ -15,7 +15,12 @@ class ElasticSearch {
 	}
 
 	async connect() {
-		this.client = new Client({ node: this.nodeUrl, auth: { apiKey: this.apiKey } maxRetries: 5, requestTimeout: 60000 })
+		this.client = new Client({
+			node: this.nodeUrl,
+			auth: { apiKey: this.apiKey },
+			maxRetries: 5,
+			requestTimeout: 60000,
+		})
 		return {
 			elasticSearch: this.client,
 		}
