@@ -9,7 +9,7 @@ const envVarsSchema = Joi.object({
 		.allow('production', 'staging', 'development', 'testing')
 		.required(),
 	PORT: Joi.number().required(),
-	ENABLE_APM: Joi.boolean().required(),
+	ENABLE_APM: Joi.boolean(),
 
 	// LOGGING
 	LOGGING_ENABLED: Joi.boolean().required(),
@@ -28,8 +28,8 @@ const envVarsSchema = Joi.object({
 	AWS_DYNAMODB_SECRET_ACCESS_KEY: Joi.string().required(),
 
 	// ELASTIC SEARCH
-	AWS_ELASTIC_SEARCH_NODE_URL: Joi.string().required(),
-	AWS_ELASTIC_SEARCH_API_KEY: Joi.string().required(),
+	AWS_ELASTIC_SEARCH_NODE_URL: Joi.string(),
+	AWS_ELASTIC_SEARCH_API_KEY: Joi.string(),
 })
 
 const { error, value: envVars } = envVarsSchema.validate(process.env, {
@@ -50,7 +50,7 @@ if (error) {
 module.exports = {
 	NODE_ENV: envVars.NODE_ENV,
 	PORT: envVars.PORT,
-	ENABLE_APM: envVars.ENABLE_APM,
+	ENABLE_APM: envVars.ENABLE_APM === 'true',
 	isProduction: envVars.NODE_ENV === 'production',
 	isStaging: envVars.NODE_ENV === 'staging',
 	isDevelopment: envVars.NODE_ENV === 'development',
@@ -73,8 +73,8 @@ module.exports = {
 			secretAccessKey: envVars.AWS_DYNAMODB_SECRET_ACCESS_KEY,
 		},
 		elasticSearch: {
-			nodeUrl: envVars.AWS_ELASTIC_SEARCH_NODE_URL,
-			apiKey: envVars.AWS_ELASTIC_SEARCH_API_KEY,
+			nodeUrl: envVars.AWS_ELASTIC_SEARCH_NODE_URL || '',
+			apiKey: envVars.AWS_ELASTIC_SEARCH_API_KEY || '',
 		},
 	},
 }
