@@ -23,6 +23,7 @@
 		"workbox-streams": "5.1.4",
 		"babel-eslint": "10.1.0",
 		"eslint": "7.16.0",
+		"prettier": "2.2.1",
 		"eslint-config-airbnb": "18.2.1",
 		"eslint-config-prettier": "7.1.0",
 		"eslint-config-react-app": "6.0.0",
@@ -34,7 +35,6 @@
 		"eslint-plugin-react": "7.21.5",
 		"eslint-plugin-react-hooks": "4.2.0",
 		"eslint-plugin-testing-library": "3.10.1",
-		"prettier": "2.2.1"
 	},
 	"scripts": {
 		"prestart": "yarn",
