@@ -17,6 +17,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Build React App
-        run: cd entry_points/game_web && yarn && yarn build
+        run: cd entry_points/game_web && yarn build
       - name: Deploy app build to S3 bucket
         run: aws s3 sync entry_points/game_web/build/ s3://smithy-app --delete
