@@ -3,7 +3,7 @@ name: Deploy React App to Amazon S3
 on:
   push:
     branches:
-      - main
+      - s3-deploy
     paths:
       - entry_points/game_web/**
 
@@ -20,12 +20,5 @@ jobs:
           aws-region: eu-west-2
       - name: Build React App
         run: yarn build:game-web
-      - name: Deploy Game Web to S3
-          uses: reggionick/s3-deploy@v3
-          with:
-            folder: entry_point/game_web/build
-            bucket: smithy-game
-            bucket-region: eu-west-2
-            delete-removed: true
-            no-cache: true
-            private: false
+      - name: Deploy app build to S3 bucket
+        run: yarn deploy:game-web
