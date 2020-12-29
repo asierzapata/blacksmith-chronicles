@@ -9,7 +9,7 @@
 		"build:game-web": "cd entry_points/game_web && yarn build",
 		"deploy:game-web":"cd entry_points/game_web && yarn deploy"
 	},
-	"dependencies": {
+	"devDependencies": {
 		"babel-eslint": "10.1.0",
 		"eslint": "7.16.0",
 		"eslint-config-airbnb": "18.2.1",
@@ -23,6 +23,6 @@
 		"eslint-plugin-react": "7.21.5",
 		"eslint-plugin-react-hooks": "4.2.0",
 		"eslint-plugin-testing-library": "3.10.1",
-		"prettier": "2.2.1",
+		"prettier": "2.2.1"
 	}
 }
