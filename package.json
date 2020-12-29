@@ -5,9 +5,11 @@
 	"scripts": {
 		"lint": "eslint .",
 		"docker:build:city-api": "docker build -t city-api -f entry_points/city_api/docker/Dockerfile .",
-		"docker:run:city-api": "docker run -p 80:80 --env-file ./src/city/shared/env/production.env -d city-api"
+		"docker:run:city-api": "docker run -p 80:80 --env-file ./src/city/shared/env/production.env -d city-api",
+		"build:game-web": "cd entry_points/game_web && yarn build",
+		"deploy:game-web":" aws s3 sync entry_points/game_web/build/ s3://smithy-app --delete"
 	},
-	"devDependencies": {
+	"dependencies": {
 		"babel-eslint": "10.1.0",
 		"eslint": "7.16.0",
 		"eslint-config-airbnb": "18.2.1",
