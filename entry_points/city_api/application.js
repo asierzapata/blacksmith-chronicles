@@ -94,7 +94,6 @@ class Application {
 			}
 
 			const startEventHandling = async (handler, eventType, moduleName) => {
-				if (!envVars.ENABLE_APM) return
 				const currentSpan = elasticSearchAPM.startSpan(
 					`EventHandler/${moduleName}/${eventType}`,
 					'event',
@@ -102,12 +101,11 @@ class Application {
 					eventType
 				)
 				const result = await handler()
-				currentSpan.end()
+
+				if (currentSpan) currentSpan.end()
 				return result
 			}
 			const startCommandHandling = async (handler, commandType, moduleName) => {
-				if (!envVars.ENABLE_APM) return
-
 				const currentSpan = elasticSearchAPM.startSpan(
 					`CommandHandler/${moduleName}/${commandType}`,
 					'command',
@@ -115,12 +113,11 @@ class Application {
 					commandType
 				)
 				const result = await handler()
-				currentSpan.end()
+
+				if (currentSpan) currentSpan.end()
 				return result
 			}
 			const startQueryHandling = async (handler, queryType, moduleName) => {
-				if (!envVars.ENABLE_APM) return
-
 				const currentSpan = elasticSearchAPM.startSpan(
 					`QueryHandler/${moduleName}/${queryType}`,
 					'query',
@@ -128,7 +125,8 @@ class Application {
 					queryType
 				)
 				const result = await handler()
-				currentSpan.end()
+
+				if (currentSpan) currentSpan.end()
 				return result
 			}
 

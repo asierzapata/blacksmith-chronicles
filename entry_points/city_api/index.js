@@ -4,18 +4,17 @@ const dotenv = require('dotenv')
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing')
 	dotenv.config({ path: `../../src/city/shared/env/${process.env.NODE_ENV}.env` })
 
-if (process.env.ENABLE_APM === 'true') {
-	elasticSearchAPM.start({
-		// Override service name from package.json
-		// Allowed characters: a-z, A-Z, 0-9, -, _, and space
-		serviceName: 'City API',
-		environment: process.env.NODE_ENV,
-		// Use if APM Server requires a token
-		secretToken: process.env.ELASTIC_SEARCH_APM_SECRET_TOKEN,
-		// Set custom APM Server URL (default: http://localhost:8200)
-		serverUrl: process.env.ELASTIC_SEARCH_APM_HOST,
-	})
-}
+elasticSearchAPM.start({
+	// Override service name from package.json
+	// Allowed characters: a-z, A-Z, 0-9, -, _, and space
+	serviceName: 'City API',
+	environment: process.env.NODE_ENV,
+	// Use if APM Server requires a token
+	secretToken: process.env.ELASTIC_SEARCH_APM_SECRET_TOKEN,
+	// Set custom APM Server URL (default: http://localhost:8200)
+	serverUrl: process.env.ELASTIC_SEARCH_APM_HOST,
+	active: process.env.ENABLE_APM === 'true',
+})
 
 const cluster = require('cluster')
 const os = require('os')
