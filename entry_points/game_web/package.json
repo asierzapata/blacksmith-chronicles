@@ -24,6 +24,8 @@
 		"workbox-streams": "5.1.4"
 	},
 	"scripts": {
+		"prestart": "yarn",
+		"prebuild":"yarn",
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",

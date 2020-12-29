@@ -1,4 +1,4 @@
-name: s3-depl
+name: Deploy React App to Amazon S3
 
 on:
   push:
@@ -13,10 +13,10 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: AKIAZ7EFWPMXNZUKL74M
-          aws-secret-access-key: 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
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Build React App
-        run: yarn build
+        run: cd entry_points/game_web && yarn && yarn build
       - name: Deploy app build to S3 bucket
-        run: aws s3 sync ./entry_points/game_web/build s3://smity-game --delete
+        run: aws s3 sync entry_points/game_web/build/ s3://smithy-app --delete
