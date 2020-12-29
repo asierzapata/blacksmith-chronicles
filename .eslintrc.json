@@ -11,14 +11,6 @@
 		"jest-dom",
 		"testing-library"
 	],
-	"extends": [
-		"airbnb",
-		"prettier",
-		"prettier/react",
-		"plugin:jsx-a11y/strict",
-		"plugin:jest-dom/recommended",
-		"plugin:testing-library/recommended"
-	],
 	"env": {
 		"browser": true,
 		"commonjs": true,
