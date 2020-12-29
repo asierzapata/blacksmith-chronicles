@@ -20,14 +20,12 @@ jobs:
           aws-region: eu-west-2
       - name: Build React App
         run: yarn build:game-web
-      - name: Deploy
+      - name: Deploy Game Web to S3
           uses: reggionick/s3-deploy@v3
           with:
             folder: entry_point/game_web/build
-            bucket: smithy-game # ${{ secrets.S3_BUCKET }}
-            bucket-region: eu-west-2 # ${{ secrets.S3_BUCKET_REGION }}
-            # dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-            # invalidation: /
+            bucket: smithy-game
+            bucket-region: eu-west-2
             delete-removed: true
             no-cache: true
             private: false
