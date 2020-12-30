@@ -3,9 +3,10 @@ name: Deploy React App to Amazon S3
 on:
   push:
     branches:
-      - s3-deploy
+      - main
     paths:
       - entry_points/game_web/**
+      - .github/workflows/s3-deploy
 
 jobs:
   build:
