@@ -1,4 +1,7 @@
 const _ = require('lodash')
+const Chance = require('chance')
+
+const chance = new Chance()
 
 const { ApplicationError } = require('shared_kernel/errors/application_error')
 
@@ -8,14 +11,14 @@ const ValueObject = require('shared_kernel/value_objects/value_object')
 /*                       Exceptions                       */
 /* ====================================================== */
 
-class InvalidCityLocationCoordinateError extends ApplicationError {
+class InvalidResourceTypeError extends ApplicationError {
 	static get name() {
-		return 'city.1.error.city.invalid_city_location_coordinate'
+		return 'city.1.error.resource.invalid_resource_type'
 	}
 
 	static create({
-		message = 'Invalid City Location Coordinate',
-		code = 'invalid-city-location-coordinate',
+		message = 'Invalid Resource Type',
+		code = 'invalid-resource-type',
 		value,
 	} = {}) {
 		return this.Operational({
@@ -25,21 +28,44 @@ class InvalidCityLocationCoordinateError extends ApplicationError {
 		})
 	}
 }
+
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
-class CityLocationCoordinate extends ValueObject {
-	constructor(value) {
-		// TODO: Limit the max and min number
-		if (!_.isFinite(value)) {
-			throw InvalidCityLocationCoordinateError.create({ value })
+const BASE_TYPES = {
+	WOOD: 'wood',
+	STONE: 'stone',
+}
+
+const SPECIAL_TYPES = {
+	CRYSTAL: 'crystal',
+	METAL: 'metal',
+}
+
+const TYPES = {
+	...BASE_TYPES,
+	...SPECIAL_TYPES,
+}
+
+class ResourceType extends ValueObject {
+	static baseTypes = BASE_TYPES
+	static specialTypes = SPECIAL_TYPES
+	static types = TYPES
+
+	constructor(value = '') {
+		if (!_.isString(value) || !_.includes(_.values(ResourceType.types), value)) {
+			throw InvalidResourceTypeError.create({ value })
 		}
 		super(value)
 	}
 
 	static random() {
-		return new this(_.round(Math.random() * 1000))
+		return new this(chance.pickone(_.values(ResourceType.types)))
+	}
+
+	static randomSpecialType() {
+		return new this(chance.pickone(_.values(ResourceType.specialTypes)))
 	}
 }
 
@@ -47,4 +73,4 @@ class CityLocationCoordinate extends ValueObject {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { CityLocationCoordinate, InvalidCityLocationCoordinateError }
+module.exports = { ResourceType, InvalidResourceTypeError }

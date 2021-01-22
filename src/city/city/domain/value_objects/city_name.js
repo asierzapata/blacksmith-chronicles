@@ -3,14 +3,30 @@ const Chance = require('chance')
 
 const chance = new Chance()
 
+const { ApplicationError } = require('shared_kernel/errors/application_error')
+
 const ValueObject = require('shared_kernel/value_objects/value_object')
 
 /* ====================================================== */
 /*                       Exceptions                       */
 /* ====================================================== */
 
-function cityNameError() {
-	return new Error('invalid city name')
+class InvalidCityNameError extends ApplicationError {
+	static get name() {
+		return 'city.1.error.city.invalid_city_name'
+	}
+
+	static create({
+		message = 'Invalid City Name',
+		code = 'invalid-city-name',
+		value,
+	} = {}) {
+		return this.Operational({
+			name: this.name,
+			message: `${value} - ${message}`,
+			code,
+		})
+	}
 }
 
 /* ====================================================== */
@@ -21,7 +37,7 @@ class CityName extends ValueObject {
 	constructor(value = '') {
 		// TODO: refine the max length for the city name
 		if (!_.isString(value) || _.isEmpty(value) || value.length > 50) {
-			throw cityNameError({ value })
+			throw InvalidCityNameError.create({ value })
 		}
 		super(value)
 	}
@@ -35,4 +51,4 @@ class CityName extends ValueObject {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { CityName, cityNameError }
+module.exports = { CityName, InvalidCityNameError }

@@ -4,12 +4,12 @@ const { ApplicationError } = require('shared_kernel/errors/application_error')
 /*                   Implementation                       */
 /* ====================================================== */
 
-class CityNotFoundError extends ApplicationError {
+class ResourceNotFoundError extends ApplicationError {
 	static get name() {
-		return 'city.1.error.city.city_not_found'
+		return 'city.1.error.resource.resource_not_found'
 	}
 
-	static create({ message = 'City not found', code = 'city-not-found' } = {}) {
+	static create({ message = 'Resource not found', code = 'resource-not-found' } = {}) {
 		return this.Operational({
 			name: this.name,
 			message,
@@ -22,4 +22,4 @@ class CityNotFoundError extends ApplicationError {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { CityNotFoundError }
+module.exports = { ResourceNotFoundError }

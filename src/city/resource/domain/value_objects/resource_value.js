@@ -1,4 +1,7 @@
 const _ = require('lodash')
+const Chance = require('chance')
+
+const chance = new Chance()
 
 const { ApplicationError } = require('shared_kernel/errors/application_error')
 
@@ -8,14 +11,14 @@ const ValueObject = require('shared_kernel/value_objects/value_object')
 /*                       Exceptions                       */
 /* ====================================================== */
 
-class InvalidCityLocationCoordinateError extends ApplicationError {
+class InvalidResourceValueError extends ApplicationError {
 	static get name() {
-		return 'city.1.error.city.invalid_city_location_coordinate'
+		return 'city.1.error.resource.invalid_resource_value'
 	}
 
 	static create({
-		message = 'Invalid City Location Coordinate',
-		code = 'invalid-city-location-coordinate',
+		message = 'Invalid Resource Value',
+		code = 'invalid-resource-value',
 		value,
 	} = {}) {
 		return this.Operational({
@@ -25,21 +28,21 @@ class InvalidCityLocationCoordinateError extends ApplicationError {
 		})
 	}
 }
+
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
-class CityLocationCoordinate extends ValueObject {
-	constructor(value) {
-		// TODO: Limit the max and min number
-		if (!_.isFinite(value)) {
-			throw InvalidCityLocationCoordinateError.create({ value })
+class ResourceValue extends ValueObject {
+	constructor(value = 0) {
+		if (!_.isFinite(value) || value < 0) {
+			throw InvalidResourceValueError.create({ value })
 		}
 		super(value)
 	}
 
 	static random() {
-		return new this(_.round(Math.random() * 1000))
+		return new this(chance.integer({ min: 0 }))
 	}
 }
 
@@ -47,4 +50,4 @@ class CityLocationCoordinate extends ValueObject {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { CityLocationCoordinate, InvalidCityLocationCoordinateError }
+module.exports = { ResourceValue, InvalidResourceValueError }

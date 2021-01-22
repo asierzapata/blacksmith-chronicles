@@ -96,15 +96,18 @@ class City extends AggregateRoot {
 
 	rename(name) {
 		this._attributes.name = name
+		this._attributes.updatedAt = Timestamp.now()
 		this.record(CityRenamedEvent.create(this))
 	}
 
 	relocate(location) {
 		this._attributes.location = location
+		this._attributes.updatedAt = Timestamp.now()
 		this.record(CityRelocatedEvent.create(this))
 	}
 
 	delete() {
+		this._attributes.updatedAt = Timestamp.now()
 		this.record(CityDeletedEvent.create(this))
 	}
 }

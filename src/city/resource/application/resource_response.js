@@ -4,7 +4,7 @@ const _ = require('lodash')
 /*                         Domain                         */
 /* ====================================================== */
 
-const { City } = require('city/city/domain/aggregate/city_aggregate')
+const { Resource } = require('city/resource/domain/aggregate/resource_aggregate')
 
 const { ApplicationError } = require('shared_kernel/errors/application_error')
 
@@ -12,49 +12,49 @@ const { ApplicationError } = require('shared_kernel/errors/application_error')
 /*                      Public API                        */
 /* ====================================================== */
 
-const CityResponse = {
+const ResourceResponse = {
 	dataResponse,
 	errorResponse,
 	randomSuccessResponse,
 	randomErrorResponse,
 }
 
-module.exports = { CityResponse }
+module.exports = { ResourceResponse }
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
-function dataResponse({ cities, meta = {} }) {
+function dataResponse({ resources, meta = {} }) {
 	return {
 		data: {
-			cities: _convertCities(cities),
+			resources: _convertResources(resources),
 		},
-		meta: { ...meta, module: 'city.city' },
+		meta: { ...meta, module: 'city.resource' },
 	}
 }
 function errorResponse({ errors, meta = {} }) {
 	return {
 		errors: _convertErrors(errors),
-		meta: { ...meta, module: 'city.city' },
+		meta: { ...meta, module: 'city.resource' },
 	}
 }
 
-function _convertCity(city) {
-	if (!city) return
+function _convertResource(resource) {
+	if (!resource) return
 
 	return {
-		id: city.getId().toValue(),
-		userId: city.getUserId().toValue(),
-		name: city.getName().toValue(),
-		location: city.getLocation().toValue(),
-		updatedAt: city.getUpdatedAt().toValue(),
-		createdAt: city.getCreatedAt().toValue(),
+		id: resource.getId().toValue(),
+		cityId: resource.getCityId().toValue(),
+		value: resource.getValue().toValue(),
+		rate: resource.getRate().toValue(),
+		type: resource.getType().toValue(),
+		createdAt: resource.getCreatedAt().toValue(),
 	}
 }
 
-function _convertCities(cities) {
-	return _.compact(cities.map((city) => _convertCity(city)))
+function _convertResources(resources) {
+	return _.compact(resources.map((resource) => _convertResource(resource)))
 }
 
 function _convertError(error) {
@@ -68,9 +68,9 @@ function _convertErrors(errors) {
 	return _.compact(errors.map((error) => _convertError(error)))
 }
 
-function randomSuccessResponse(cities) {
+function randomSuccessResponse(resources) {
 	return dataResponse({
-		cities: cities || _.times(_.random(1, 10), () => City.random()),
+		resources: resources || _.times(_.random(1, 10), () => Resource.random()),
 	})
 }
 

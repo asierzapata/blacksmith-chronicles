@@ -6,7 +6,7 @@ const { ApplicationError } = require('shared_kernel/errors/application_error')
 
 class CityNotFoundError extends ApplicationError {
 	static get name() {
-		return 'city.1.error.city.city_not_found'
+		return 'city.1.error.resource.city_not_found'
 	}
 
 	static create({ message = 'City not found', code = 'city-not-found' } = {}) {
