@@ -6,7 +6,7 @@
 		// Relative to "baseUrl"
 		"paths": {
 			"city/*": ["./src/city/*"],
-			"city_api/*": ["./entry_points/city_api/*"],
+			"game_api/*": ["./entry_points/game_api/*"],
 			"user/*": ["./src/user/*"],
 			"user_api/*": ["./entry_points/user_api/*"],
 			"shared_kernel/*": ["./src/shared_kernel/*"],

@@ -1,12 +1,12 @@
 const {
 	InvalidInputStringError,
-} = require('city_api/utils/input_validators/errors/invalid_input_string_error')
+} = require('game_api/utils/input_validators/errors/invalid_input_string_error')
 const {
 	InvalidInputBooleanError,
-} = require('city_api/utils/input_validators/errors/invalid_input_boolean_error')
+} = require('game_api/utils/input_validators/errors/invalid_input_boolean_error')
 const {
 	InvalidInputNumberError,
-} = require('city_api/utils/input_validators/errors/invalid_input_number_error')
+} = require('game_api/utils/input_validators/errors/invalid_input_number_error')
 
 /* ====================================================== */
 /*                      Public API                        */

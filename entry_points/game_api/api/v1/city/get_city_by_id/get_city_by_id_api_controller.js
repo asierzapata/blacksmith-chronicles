@@ -1,34 +1,31 @@
 const _ = require('lodash')
 
-const { checkString } = require('city_api/utils/input_validators')
+const { checkString } = require('game_api/utils/input_validators')
 const {
 	InvalidInputStringError,
-} = require('city_api/utils/input_validators/errors/invalid_input_string_error')
+} = require('game_api/utils/input_validators/errors/invalid_input_string_error')
 
-const { errorReponse, successReponse } = require('city_api/utils/responses_factory')
+const { errorReponse, successReponse } = require('game_api/utils/responses_factory')
 
 /* ====================================================== */
 /*                        Module                          */
 /* ====================================================== */
 
-const { RenameCityCommand } = require('city/city')
-const { CityNotFoundError } = require('city/city/domain/errors/city_not_found_error')
+const { GetCitiesQuery } = require('city/city')
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
 const ERROR_STATUS_MAPPING = {
-	[CityNotFoundError.name]: 404,
 	[InvalidInputStringError.name]: 400,
 }
 
-async function renameCity(req, res, next) {
+async function getCityById(req, res, next) {
 	try {
-		const cityResponse = await req.commandBus.handle(
-			RenameCityCommand.create({
-				cityId: checkString(req.params.cityId),
-				name: checkString(req.body.name),
+		const cityResponse = await req.queryBus.handle(
+			GetCitiesQuery.create({
+				cityIds: [checkString(req.params.cityId)],
 				session: req.session,
 			})
 		)
@@ -42,7 +39,9 @@ async function renameCity(req, res, next) {
 		return successReponse({
 			res,
 			statusCode: 200,
-			data: { cities: cityResponse.data.cities },
+			data: {
+				cities: cityResponse.data.cities,
+			},
 		})
 	} catch (error) {
 		if (error.toValue) {
@@ -60,4 +59,4 @@ async function renameCity(req, res, next) {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { renameCity }
+module.exports = { getCityById }

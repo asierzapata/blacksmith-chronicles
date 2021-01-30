@@ -53,13 +53,13 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: city-api
+          ECR_REPOSITORY: game-api
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f entry_points/city_api/docker/Dockerfile .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f entry_points/game_api/docker/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
@@ -67,14 +67,14 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ./entry_points/city_api/aws_ecs/city_api_task_definition.json
-          container-name: city-api
+          task-definition: ./entry_points/game_api/aws_ecs/game_api_task_definition.json
+          container-name: game-api
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition to Stage Cluste
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: city-api
+          service: game-api
           cluster: game-stage-cluster
           wait-for-service-stability: true

@@ -6,7 +6,7 @@ const containerFactory = require('shared_kernel/container_factory')
 const envVars = require('city/shared/env')
 const { Session } = require('city/shared/session/session')
 
-const { Logger, LOGGER_SOURCES } = require('city_api/services/logger')
+const { Logger, LOGGER_SOURCES } = require('game_api/services/logger')
 
 // Buses
 // -----
@@ -26,9 +26,9 @@ const cityModule = require('city/city')
 
 const modules = [cityModule]
 
-const Server = require('city_api/server')
-const { AuthenticationService } = require('city_api/services/authentication')
-const { GeolocationService } = require('city_api/services/geolocation')
+const Server = require('game_api/server')
+const { AuthenticationService } = require('game_api/services/authentication')
+const { GeolocationService } = require('game_api/services/geolocation')
 const {
 	ElasticSearch,
 } = require('shared_kernel/infrastructure/persistence/elastic_search')

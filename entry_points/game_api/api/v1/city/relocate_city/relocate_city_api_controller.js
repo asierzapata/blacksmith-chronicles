@@ -1,17 +1,20 @@
 const _ = require('lodash')
 
-const { checkString } = require('city_api/utils/input_validators')
+const { checkString, checkNumber } = require('game_api/utils/input_validators')
 const {
 	InvalidInputStringError,
-} = require('city_api/utils/input_validators/errors/invalid_input_string_error')
+} = require('game_api/utils/input_validators/errors/invalid_input_string_error')
+const {
+	InvalidInputNumberError,
+} = require('game_api/utils/input_validators/errors/invalid_input_number_error')
 
-const { successReponse, errorReponse } = require('city_api/utils/responses_factory')
+const { errorReponse, successReponse } = require('game_api/utils/responses_factory')
 
 /* ====================================================== */
 /*                        Module                          */
 /* ====================================================== */
 
-const { DeleteCityCommand } = require('city/city')
+const { RelocateCityCommand } = require('city/city')
 const { CityNotFoundError } = require('city/city/domain/errors/city_not_found_error')
 
 /* ====================================================== */
@@ -21,27 +24,32 @@ const { CityNotFoundError } = require('city/city/domain/errors/city_not_found_er
 const ERROR_STATUS_MAPPING = {
 	[CityNotFoundError.name]: 404,
 	[InvalidInputStringError.name]: 400,
+	[InvalidInputNumberError.name]: 400,
 }
 
-async function deleteCity(req, res, next) {
+async function relocateCity(req, res, next) {
 	try {
-		const response = await req.commandBus.handle(
-			DeleteCityCommand.create({
+		const cityResponse = await req.commandBus.handle(
+			RelocateCityCommand.create({
 				cityId: checkString(req.params.cityId),
+				location: {
+					x: checkNumber(req.body.location.x),
+					y: checkNumber(req.body.location.y),
+				},
 				session: req.session,
 			})
 		)
-		if (!_.isEmpty(response.errors)) {
+		if (!_.isEmpty(cityResponse.errors)) {
 			return errorReponse({
 				res,
-				errors: response.errors,
+				errors: cityResponse.errors,
 				errorsStatusMapping: ERROR_STATUS_MAPPING,
 			})
 		}
 		return successReponse({
 			res,
 			statusCode: 200,
-			data: {},
+			data: { cities: cityResponse.data.cities },
 		})
 	} catch (error) {
 		if (error.toValue) {
@@ -59,4 +67,4 @@ async function deleteCity(req, res, next) {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { deleteCity }
+module.exports = { relocateCity }

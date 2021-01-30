@@ -4,7 +4,7 @@ Fragile:
   - entry_points/**/package.json
 
 City:
-  - entry_points/city_api/**/*
+  - entry_points/game_api/**/*
 
 User:
   - entry_points/user_api/**/*
