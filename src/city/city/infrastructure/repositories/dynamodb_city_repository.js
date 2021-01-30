@@ -1,12 +1,14 @@
 const assert = require('assert')
 const _ = require('lodash')
 
+const { ApplicationError } = require('shared_kernel/errors/application_error')
+
 /* ====================================================== */
 /*                         Domain                         */
 /* ====================================================== */
 
 const { Id } = require('shared_kernel/value_objects/id')
-const { NullableTimestamp } = require('shared_kernel/value_objects/nullable_timestamp')
+const { Timestamp } = require('shared_kernel/value_objects/timestamp')
 const { City } = require('city/city/domain/aggregate/city_aggregate')
 const { CityName } = require('city/city/domain/value_objects/city_name')
 const { CityLocation } = require('city/city/domain/value_objects/city_location')
@@ -42,7 +44,7 @@ class DynamoDBCityRepository {
 		assert(db, 'City DynamoDB Repository - Missing db')
 		this.env = env
 		this.db = db
-		this.table = 'city'
+		this.table = 'cities'
 	}
 
 	// Read
@@ -149,13 +151,23 @@ module.exports = { DynamoDBCityRepository }
 /*                      Data Mapper                       */
 /* ====================================================== */
 
-function cityDataMapperError() {
-	throw new Error('city data mapper error')
-	// return errors.databaseValidation({
-	// 	errorCode: 'city-data-mapping-error',
-	// 	data: value,
-	// 	message,
-	// })
+class CityDataMapperError extends ApplicationError {
+	static get name() {
+		return 'city.1.error.city.city_data_mapper'
+	}
+
+	static create({
+		message = 'Error mapping DB values',
+		code = 'city-repository',
+		error,
+	} = {}) {
+		return this.Operational({
+			name: this.name,
+			message,
+			code,
+			error,
+		})
+	}
 }
 
 function toEntity(data) {
@@ -167,27 +179,23 @@ function toEntity(data) {
 				userId: new Id(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.userId]),
 				name: new CityName(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.name]),
 				location: new CityLocation(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.location]),
-				createdAt: data[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt]
-					? new NullableTimestamp(
-							new Date(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt])
-					  )
-					: NullableTimestamp.never(),
-				updatedAt: data[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt]
-					? new NullableTimestamp(
-							new Date(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt])
-					  )
-					: NullableTimestamp.never(),
+				updatedAt: new Timestamp(
+					new Date(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.updatedAt])
+				),
+				createdAt: new Timestamp(
+					new Date(data[ENTITY_FIELDS_TO_DATABASE_MAPPING.createdAt])
+				),
 			},
 			{ isNew: false }
 		)
 	} catch (err) {
-		throw cityDataMapperError(err)
+		throw CityDataMapperError.create(err)
 	}
 }
 
 function toEntities(data = []) {
 	if (_.isEmpty(data)) return []
-	return _.map(data, (d, number) => toEntity({ ...d, number }))
+	return _.map(data, toEntity)
 }
 
 function toDatabase(city) {

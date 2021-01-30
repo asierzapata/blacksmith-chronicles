@@ -33,6 +33,10 @@ class Timestamp extends ValueObject {
 	toISOString() {
 		return this._value.toISOString()
 	}
+
+	differenceWith({ timestamp }) {
+		return (this._value - timestamp._value) / 1000
+	}
 }
 
 /* ====================================================== */

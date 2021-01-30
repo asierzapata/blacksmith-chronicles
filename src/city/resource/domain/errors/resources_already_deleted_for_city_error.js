@@ -4,12 +4,15 @@ const { ApplicationError } = require('shared_kernel/errors/application_error')
 /*                   Implementation                       */
 /* ====================================================== */
 
-class CityNotFoundError extends ApplicationError {
+class ResourcesAlreadyDeletedForCityError extends ApplicationError {
 	static get name() {
-		return 'city.1.error.city.city_not_found'
+		return 'city.1.error.resource.resources_already_deleted_for_city'
 	}
 
-	static create({ message = 'City not found', code = 'city-not-found' } = {}) {
+	static create({
+		message = 'Resources Already Deleted For City',
+		code = 'resources-already-deleted-for-city',
+	} = {}) {
 		return this.Operational({
 			name: this.name,
 			message,
@@ -22,4 +25,4 @@ class CityNotFoundError extends ApplicationError {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { CityNotFoundError }
+module.exports = { ResourcesAlreadyDeletedForCityError }

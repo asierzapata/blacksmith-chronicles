@@ -1,11 +1,9 @@
-const _ = require('lodash')
-
 const { Query } = require('shared_kernel/buses/command_query')
-const { CityResponse } = require('city/city/application/city_response')
+const { ResourceResponse } = require('city/resource/application/resource_response')
 
 const {
-	getCitiesUseCase,
-} = require('city/city/application/get_cities/get_cities_use_case')
+	getResourcesForCityUseCase,
+} = require('city/resource/application/get_resources_for_city/get_resources_for_city_use_case')
 
 /* ====================================================== */
 /*                    Value Objects                       */
@@ -18,15 +16,15 @@ const { Id } = require('shared_kernel/value_objects/id')
 /*                          Query                         */
 /* ====================================================== */
 
-class GetCitiesQuery extends Query {
+class GetResourcesForCity extends Query {
 	static get type() {
-		return 'city.1.query.city.get_cities'
+		return 'city.1.query.resource.get_resources_for_city'
 	}
 
-	static create({ cityIds, session }) {
+	static create({ cityId, session }) {
 		return new this({
 			type: this.type,
-			attributes: { cityIds },
+			attributes: { cityId },
 			meta: { session },
 		})
 	}
@@ -36,15 +34,15 @@ class GetCitiesQuery extends Query {
 /*                        Handler                         */
 /* ====================================================== */
 
-async function handleGetCitiesQuery(query, dependencies) {
-	const cityIds = _.map(query.getAttributes().cityIds, (cityId) => new Id(cityId))
+async function handleGetResourcesForCity(query, dependencies) {
+	const cityId = new Id(query.getAttributes().cityId)
 	const session = new Session(query.getMetadata().session)
 
 	try {
-		const cities = await getCitiesUseCase({ cityIds, session }, dependencies)
-		return CityResponse.dataResponse({ cities })
+		const resources = await getResourcesForCityUseCase({ cityId, session }, dependencies)
+		return ResourceResponse.dataResponse({ resources })
 	} catch (err) {
-		return CityResponse.errorResponse({ errors: [err] })
+		return ResourceResponse.errorResponse({ errors: [err] })
 	}
 }
 
@@ -53,6 +51,6 @@ async function handleGetCitiesQuery(query, dependencies) {
 /* ====================================================== */
 
 module.exports = {
-	GetCitiesQuery,
-	handleGetCitiesQuery,
+	GetResourcesForCity,
+	handleGetResourcesForCity,
 }
