@@ -8,21 +8,21 @@ const cors = require('cors')
 
 const env = require('city/shared/env')
 const uuid = require('shared_kernel/uuid')
-const HTTPServer = require('city_api/services/http_server')
-const { Logger, LOGGER_SOURCES } = require('city_api/services/logger')
+const HTTPServer = require('game_api/services/http_server')
+const { Logger, LOGGER_SOURCES } = require('game_api/services/logger')
 
 /* ====================================================== */
 /*                      Middleware                        */
 /* ====================================================== */
 
-const authenticationMiddleware = require('city_api/middlewares/authentication')
+const authenticationMiddleware = require('game_api/middlewares/authentication')
 
 /* ====================================================== */
 /*                        Routes                          */
 /* ====================================================== */
 
-const health = require('city_api/health')
-const api = require('city_api/api')
+const health = require('game_api/health')
+const api = require('game_api/api')
 const { ApplicationError } = require('shared_kernel/errors/application_error')
 const { errorReponse } = require('./utils/responses_factory')
 

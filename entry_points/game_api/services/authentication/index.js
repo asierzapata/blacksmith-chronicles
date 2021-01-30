@@ -1,5 +1,5 @@
 const ms = require('ms')
-const { JWTService } = require('city_api/services/jwt')
+const { JWTService } = require('game_api/services/jwt')
 
 /* ====================================================== */
 /*                    Implementation                      */

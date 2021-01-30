@@ -1,31 +1,35 @@
 const _ = require('lodash')
 
-const { checkString } = require('city_api/utils/input_validators')
+const { successReponse, errorReponse } = require('game_api/utils/responses_factory')
+const { checkString } = require('game_api/utils/input_validators')
 const {
 	InvalidInputStringError,
-} = require('city_api/utils/input_validators/errors/invalid_input_string_error')
-
-const { errorReponse, successReponse } = require('city_api/utils/responses_factory')
+} = require('game_api/utils/input_validators/errors/invalid_input_string_error')
 
 /* ====================================================== */
 /*                        Module                          */
 /* ====================================================== */
 
-const { GetCitiesQuery } = require('city/city')
+const { CreateCityCommand } = require('city/city')
+const {
+	CityAlreadyExistsError,
+} = require('city/city/domain/errors/city_already_exists_error')
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
 const ERROR_STATUS_MAPPING = {
+	[CityAlreadyExistsError.name]: 409,
 	[InvalidInputStringError.name]: 400,
 }
 
-async function getCityById(req, res, next) {
+async function createCity(req, res, next) {
 	try {
-		const cityResponse = await req.queryBus.handle(
-			GetCitiesQuery.create({
-				cityIds: [checkString(req.params.cityId)],
+		const cityResponse = await req.commandBus.handle(
+			CreateCityCommand.create({
+				cityId: checkString(req.body.cityId),
+				userId: req.session.distinctId,
 				session: req.session,
 			})
 		)
@@ -38,10 +42,8 @@ async function getCityById(req, res, next) {
 		}
 		return successReponse({
 			res,
-			statusCode: 200,
-			data: {
-				cities: cityResponse.data.cities,
-			},
+			statusCode: 201,
+			data: { cities: cityResponse.data.cities },
 		})
 	} catch (error) {
 		if (error.toValue) {
@@ -59,4 +61,4 @@ async function getCityById(req, res, next) {
 /*                      Public API                        */
 /* ====================================================== */
 
-module.exports = { getCityById }
+module.exports = { createCity }

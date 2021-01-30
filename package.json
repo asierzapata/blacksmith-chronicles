@@ -4,11 +4,11 @@
 	"license": "MIT",
 	"scripts": {
 		"lint": "eslint .",
-		"docker:build:city-api": "docker build -t city-api -f entry_points/city_api/docker/Dockerfile .",
-		"docker:run:city-api": "docker run -p 80:80 --env-file ./src/city/shared/env/production.env -d city-api",
+		"docker:build:game-api": "docker build -t game-api -f entry_points/game_api/docker/Dockerfile .",
+		"docker:run:game-api": "docker run -p 80:80 --env-file ./src/game/shared/env/production.env -d game-api",
 		"prebuild:game-web": "yarn",
 		"build:game-web": "cd entry_points/game_web && yarn build",
-		"deploy:game-web":"cd entry_points/game_web && yarn deploy"
+		"deploy:game-web": "cd entry_points/game_web && yarn deploy"
 	},
 	"devDependencies": {
 		"babel-eslint": "10.1.0",

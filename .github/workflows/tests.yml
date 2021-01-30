@@ -20,9 +20,9 @@ jobs:
         with:
           node-version: '12.19.0'
       - name: Clean install BE dependencies
-        run: yarn --cwd entry_points/city_api ci
+        run: yarn --cwd entry_points/game_api ci
       - name: Run BE tests
-        run: yarn --cwd entry_points/city_api test
+        run: yarn --cwd entry_points/game_api test
   User:
     runs-on: ubuntu-latest
     timeout-minutes: 20

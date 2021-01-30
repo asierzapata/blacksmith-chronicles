@@ -6,19 +6,11 @@
 			"dnsSearchDomains": null,
 			"environmentFiles": [
 				{
-					"value": "arn:aws:s3:::game-cluster-configuration/stage/production.env",
+					"value": "arn:aws:s3:::game-cluster-configuration/production/production.env",
 					"type": "s3"
 				}
 			],
-			"logConfiguration": {
-				"logDriver": "awslogs",
-				"secretOptions": null,
-				"options": {
-					"awslogs-group": "/ecs/city-api",
-					"awslogs-region": "eu-west-2",
-					"awslogs-stream-prefix": "ecs"
-				}
-			},
+			"logConfiguration": null,
 			"entryPoint": null,
 			"portMappings": [
 				{
@@ -48,7 +40,7 @@
 			"memoryReservation": 896,
 			"volumesFrom": [],
 			"stopTimeout": null,
-			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/city-api:7ecd2218db9257a812a0e1c9e5bdc3dfb24c694d",
+			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/game-api:latest",
 			"startTimeout": null,
 			"firelensConfiguration": null,
 			"dependsOn": null,
@@ -56,7 +48,7 @@
 			"interactive": null,
 			"healthCheck": {
 				"retries": 2,
-				"command": ["CMD-SHELL", "curl -f http://localhost/health || exit 1"],
+				"command": ["CMD-SHELL curl -f http://localhost/health || exit 1"],
 				"timeout": 5,
 				"interval": 60,
 				"startPeriod": 30
@@ -67,24 +59,19 @@
 			"extraHosts": null,
 			"pseudoTerminal": null,
 			"user": null,
-			"readonlyRootFilesystem": null,
-			"dockerLabels": null,
+			"readonlyRootFilesystem": false,
+			"dockerLabels": {
+				"Environment": "Production",
+				"Application": "Game"
+			},
 			"systemControls": null,
 			"privileged": null,
-			"name": "city-api"
+			"name": "game-api"
 		},
 		{
 			"dnsSearchDomains": null,
 			"environmentFiles": null,
-			"logConfiguration": {
-				"logDriver": "awslogs",
-				"secretOptions": null,
-				"options": {
-					"awslogs-group": "/ecs/city-api",
-					"awslogs-region": "eu-west-2",
-					"awslogs-stream-prefix": "ecs"
-				}
-			},
+			"logConfiguration": null,
 			"entryPoint": null,
 			"portMappings": [],
 			"command": null,
@@ -111,7 +98,12 @@
 			"image": "685327678254.dkr.ecr.eu-west-2.amazonaws.com/filebeat:latest",
 			"startTimeout": null,
 			"firelensConfiguration": null,
-			"dependsOn": null,
+			"dependsOn": [
+				{
+					"containerName": "game-api",
+					"condition": "START"
+				}
+			],
 			"disableNetworking": null,
 			"interactive": null,
 			"healthCheck": null,
@@ -122,7 +114,10 @@
 			"pseudoTerminal": null,
 			"user": null,
 			"readonlyRootFilesystem": null,
-			"dockerLabels": null,
+			"dockerLabels": {
+				"Environment": "Production",
+				"Application": "Game"
+			},
 			"systemControls": null,
 			"privileged": null,
 			"name": "filebeat"
@@ -131,11 +126,77 @@
 	"placementConstraints": [],
 	"memory": "1024",
 	"taskRoleArn": "arn:aws:iam::685327678254:role/ecsTaskExecutionRole",
-	"family": "city-api",
+	"compatibilities": ["EC2", "FARGATE"],
+	"taskDefinitionArn": "arn:aws:ecs:eu-west-2:685327678254:task-definition/game-api:1",
+	"family": "game-api",
+	"requiresAttributes": [
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.ecr-auth"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "ecs.capability.env-files.s3"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.task-iam-role"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "ecs.capability.container-health-check"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "ecs.capability.container-ordering"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "ecs.capability.execution-role-ecr-pull"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "ecs.capability.task-eni"
+		},
+		{
+			"targetId": null,
+			"targetType": null,
+			"value": null,
+			"name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+		}
+	],
 	"pidMode": null,
 	"requiresCompatibilities": ["FARGATE"],
 	"networkMode": "awsvpc",
 	"cpu": "512",
+	"revision": 1,
+	"status": "ACTIVE",
 	"inferenceAccelerators": null,
 	"proxyConfiguration": null,
 	"volumes": [

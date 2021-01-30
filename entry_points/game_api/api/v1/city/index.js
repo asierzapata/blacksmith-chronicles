@@ -8,14 +8,14 @@ const router = require('express').Router()
 /*                       Handlers                         */
 /* ====================================================== */
 
-const { createCity } = require('./create_city/create_city_api_controller')
-const { deleteCity } = require('./delete_city/delete_city_api_controller')
+const { createCity } = require('./create_city/create_game_api_controller')
+const { deleteCity } = require('./delete_city/delete_game_api_controller')
 const { getCityById } = require('./get_city_by_id/get_city_by_id_api_controller')
 const {
 	getCitiesByUserId,
 } = require('./get_cities_by_user_id/get_cities_by_user_id_api_controller')
-const { relocateCity } = require('./relocate_city/relocate_city_api_controller')
-const { renameCity } = require('./rename_city/rename_city_api_controller')
+const { relocateCity } = require('./relocate_city/relocate_game_api_controller')
+const { renameCity } = require('./rename_city/rename_game_api_controller')
 
 /* ====================================================== */
 /*                    Implementation                      */
