@@ -10,6 +10,11 @@ const {
 /*                        Events                          */
 /* ====================================================== */
 
+const { CityCreatedEvent } = require('city/city/domain/events/city_created_event')
+const { CityDeletedEvent } = require('city/city/domain/events/city_deleted_event')
+const { CityRenamedEvent } = require('city/city/domain/events/city_renamed_event')
+const { CityRelocatedEvent } = require('city/city/domain/events/city_relocated_event')
+
 /* ====================================================== */
 /*                       Handlers                         */
 /* ====================================================== */
@@ -78,6 +83,10 @@ module.exports = {
 	RenameCityCommand,
 	RelocateCityCommand,
 	// Events
+	CityCreatedEvent,
+	CityDeletedEvent,
+	CityRelocatedEvent,
+	CityRenamedEvent,
 }
 
 /* ====================================================== */
