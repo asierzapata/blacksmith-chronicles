@@ -1,4 +1,4 @@
-const envVars = require('city/shared/env')
+const envVars = require('shared_kernel/env')
 const _ = require('lodash')
 const moment = require('moment')
 

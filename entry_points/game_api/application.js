@@ -3,7 +3,7 @@ const aws = require('aws-sdk')
 
 const containerFactory = require('shared_kernel/container_factory')
 
-const envVars = require('city/shared/env')
+const envVars = require('shared_kernel/env')
 const { Session } = require('city/shared/session/session')
 
 const { Logger, LOGGER_SOURCES } = require('game_api/services/logger')

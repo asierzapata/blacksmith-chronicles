@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const helmet = require('helmet')
 const cors = require('cors')
 
-const env = require('city/shared/env')
+const env = require('shared_kernel/env')
 const uuid = require('shared_kernel/uuid')
 const HTTPServer = require('game_api/services/http_server')
 const { Logger, LOGGER_SOURCES } = require('game_api/services/logger')
